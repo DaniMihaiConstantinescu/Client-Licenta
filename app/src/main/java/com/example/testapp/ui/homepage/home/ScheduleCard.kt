@@ -18,10 +18,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.testapp.utils.dataClasses.homeScreen.Schedule
 
 @Composable
-fun ScheduleCard(title: String, interval: String, repetition: String) {
-    var checked by remember { mutableStateOf(true) }
+fun ScheduleCard(schedule: Schedule) {
+    var checked by remember { mutableStateOf(schedule.isActive) }
 
     Card(
         modifier = Modifier
@@ -38,7 +39,7 @@ fun ScheduleCard(title: String, interval: String, repetition: String) {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(text = title, color = MaterialTheme.colorScheme.primary , style = MaterialTheme.typography.bodyLarge)
+                Text(text = schedule.scheduleName, color = MaterialTheme.colorScheme.primary , style = MaterialTheme.typography.bodyLarge)
                 Switch(
                     checked = checked,
                     onCheckedChange = {
@@ -47,8 +48,33 @@ fun ScheduleCard(title: String, interval: String, repetition: String) {
                 )
             }
             
-            Text(text = repetition, modifier = Modifier.padding(bottom = 2.dp))
-            Text(text = interval, color = Color.White, style = MaterialTheme.typography.titleLarge)
+            Text(text = formatDaysOfWeek(schedule.days), modifier = Modifier.padding(bottom = 2.dp))
+            Text(text = "${schedule.from} - ${schedule.until}", color = Color.White, style = MaterialTheme.typography.titleLarge)
         }
     }
 }
+
+fun formatDaysOfWeek(days: List<Int>): String {
+    return when {
+        days.size == 7 && days.all { it in 0..6 } -> "Every day"
+        days.size == 1 && days[0] in 0..6 -> "Every ${getDayOfWeekName(days[0])}"
+        else -> {
+            val dayNames = days.mapNotNull { getDayOfWeekName(it) }
+            dayNames.joinToString(", ")
+        }
+    }
+}
+
+fun getDayOfWeekName(day: Int): String? {
+    return when (day) {
+        0 -> "Sunday"
+        1 -> "Monday"
+        2 -> "Tuesday"
+        3 -> "Wednesday"
+        4 -> "Thursday"
+        5 -> "Friday"
+        6 -> "Saturday"
+        else -> null
+    }
+}
+

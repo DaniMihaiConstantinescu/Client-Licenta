@@ -17,10 +17,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.testapp.utils.dataClasses.homeScreen.Scene
 
 @Composable
-fun SceneCard(text: String) {
-    var checked by remember { mutableStateOf(true) }
+fun SceneCard(scene: Scene) {
+    var checked by remember { mutableStateOf(scene.isActive) }
 
     Card(
         modifier = Modifier
@@ -34,7 +35,7 @@ fun SceneCard(text: String) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(text = text, color = Color.White , style = MaterialTheme.typography.bodyLarge)
+            Text(text = scene.sceneName, color = Color.White , style = MaterialTheme.typography.bodyLarge)
             Switch(
                 checked = checked,
                 onCheckedChange = {
