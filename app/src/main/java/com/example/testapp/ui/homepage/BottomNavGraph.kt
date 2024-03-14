@@ -4,9 +4,10 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.testapp.ui.homepage.screens.HomeScreen
-import com.example.testapp.ui.homepage.screens.RoomsScreen
-import com.example.testapp.ui.homepage.screens.SettingsScreen
+import com.example.testapp.ui.homepage.mainScreens.HomeScreen
+import com.example.testapp.ui.homepage.mainScreens.RoomsScreen
+import com.example.testapp.ui.homepage.mainScreens.SettingsScreen
+import com.example.testapp.ui.homepage.home.scenes.AllScenesScreen
 
 @Composable
 fun BottomNavGraph(navController: NavHostController){
@@ -15,13 +16,16 @@ fun BottomNavGraph(navController: NavHostController){
         startDestination = "home"
     ){
         composable(route = "home"){
-            HomeScreen()
+            HomeScreen(navController)
         }
         composable(route = "rooms"){
-            RoomsScreen()
+            RoomsScreen(navController)
         }
         composable(route = "settings"){
-            SettingsScreen()
+            SettingsScreen(navController)
+        }
+        composable(route = "allScenes"){
+            AllScenesScreen()
         }
     }
 

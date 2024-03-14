@@ -1,52 +1,39 @@
 package com.example.testapp.utils.viewModels.homeScreen
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.testapp.utils.api.RetrofitClient
 import com.example.testapp.utils.dataClasses.general.Device
-import com.example.testapp.utils.dataClasses.general.Settings
 import com.example.testapp.utils.dataClasses.homeScreen.Scene
+import kotlinx.coroutines.launch
 
 class HomeSceneViewModel: ViewModel(){
 
-    private val testScenes = listOf(
-        Scene(
-            devices = listOf(
-                Device(
-                    macAddress = "addressamac1",
-                    settings = Settings(
-                        listOf(
-                            Pair("temeperature", "22,5"),
-                            Pair("otherSetting", "value1")
-                        )
-                    )
-                )
-            ),
-            isActive = true,
-            sceneId = "-NsiYEZFVGx__HaZOY5i1",
-            sceneName = "Scene 1"
-        ),
-        Scene(
-            devices = listOf(
-                Device(
-                    macAddress = "addressamac2",
-                    settings = Settings(
-                        listOf(
-                            Pair("temperature", "23.5"),
-                            Pair("otherSetting", "value2")
-                        )
-                    )
-                )
-            ),
-            isActive = false,
-            sceneId = "-NsiYEZFVGx__HaZOY5i2",
-            sceneName = "Scene 2"
-        )
-    )
-
-    var topScenes by mutableStateOf<List<Scene>>(testScenes)
+    var topScenes by mutableStateOf<List<Scene>>(emptyList())
         private set
+    var isLoading by mutableStateOf(false)
+        private set
+
+    init {
+        viewModelScope.launch {
+            try {
+                isLoading = true
+                val response = RetrofitClient.sceneService.getTopScenes("1")
+                // verify if it has scenes
+                val scenes = response.scenes
+                isLoading = false
+                 topScenes = scenes ?: emptyList()
+            } catch (e: Exception) {
+                // Handle network errors
+                Log.e("API Request", "Error: ${e.message}", e)
+                isLoading = false
+            }
+        }
+    }
 
     fun toggleScene(userId: String, sceneId: String){
         // call API

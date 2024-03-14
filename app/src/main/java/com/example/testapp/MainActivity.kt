@@ -7,7 +7,6 @@ import com.example.testapp.ui.homepage.MainScreen
 import com.example.testapp.ui.theme.TestAppTheme
 
 
-
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,4 +17,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
