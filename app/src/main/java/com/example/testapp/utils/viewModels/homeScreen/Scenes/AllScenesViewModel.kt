@@ -1,4 +1,4 @@
-package com.example.testapp.utils.viewModels.homeScreen
+package com.example.testapp.utils.viewModels.homeScreen.Scenes
 
 import android.util.Log
 import androidx.compose.runtime.getValue
@@ -7,13 +7,12 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.testapp.utils.api.RetrofitClient
-import com.example.testapp.utils.dataClasses.general.Device
 import com.example.testapp.utils.dataClasses.homeScreen.Scene
 import kotlinx.coroutines.launch
 
-class HomeSceneViewModel: ViewModel(){
+class AllScenesViewModel: ViewModel() {
 
-    var topScenes by mutableStateOf<List<Scene>>(emptyList())
+    var allScenes by mutableStateOf<List<Scene>>(emptyList())
         private set
     var isLoading by mutableStateOf(false)
         private set
@@ -22,11 +21,11 @@ class HomeSceneViewModel: ViewModel(){
         viewModelScope.launch {
             try {
                 isLoading = true
-                val response = RetrofitClient.sceneService.getTopScenes("1")
+                val response = RetrofitClient.sceneService.getAllScenes("1")
                 // verify if it has scenes
                 val scenes = response.scenes
                 isLoading = false
-                 topScenes = scenes ?: emptyList()
+                allScenes = scenes ?: emptyList()
             } catch (e: Exception) {
                 // Handle network errors
                 Log.e("API Request", "Error: ${e.message}", e)
@@ -41,6 +40,3 @@ class HomeSceneViewModel: ViewModel(){
     }
 
 }
-
-
-

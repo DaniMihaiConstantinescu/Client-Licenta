@@ -28,7 +28,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.testapp.ui.homepage.home.SceneCard
 import com.example.testapp.ui.homepage.home.ScheduleCard
-import com.example.testapp.utils.viewModels.homeScreen.HomeSceneViewModel
+import com.example.testapp.utils.viewModels.homeScreen.Scenes.HomeSceneViewModel
 import com.example.testapp.utils.viewModels.homeScreen.HomeScheduleViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -97,10 +97,10 @@ fun ScenePart(navController: NavController) {
                 }
             }
         }else
-            if (sceneViewModel.topScenes.size == 0){
+            if (sceneViewModel.topScenes.isEmpty()){
                 item{
                     Text(
-                        text = "There is no scene created!",
+                        text = "There is no scene created yet!",
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(
@@ -114,7 +114,7 @@ fun ScenePart(navController: NavController) {
                 }
             }else {
                 items(sceneViewModel.topScenes) { scene ->
-                    SceneCard(scene)
+                    SceneCard(scene, navController)
                 }
             }
     }
@@ -161,10 +161,10 @@ fun SchedulePart() {
                 }
             }
         }else
-            if (scheduleViewModel.topSchedules.size == 0){
+            if (scheduleViewModel.topSchedules.isEmpty()){
                 item{
                     Text(
-                        text = "There is no schedule created!",
+                        text = "There is no schedule created yet!",
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(

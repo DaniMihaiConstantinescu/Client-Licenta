@@ -8,5 +8,3 @@ data class Scene(
     val sceneId: String,
     val sceneName: String
 )
-
-

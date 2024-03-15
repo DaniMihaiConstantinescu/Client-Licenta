@@ -1,5 +1,6 @@
 package com.example.testapp.utils.api
 
+import com.example.testapp.utils.dataClasses.general.GeneralDevice
 import com.example.testapp.utils.dataClasses.homeScreen.Scene
 import com.example.testapp.utils.dataClasses.homeScreen.Schedule
 
@@ -9,7 +10,7 @@ data class AllScenesResponse(
 )
 data class SceneResponse(
     val message: String,
-    val scenes: Map<String, Scene>
+    val scene: Scene
 )
 
 data class ScheduleResponse(
@@ -19,4 +20,13 @@ data class ScheduleResponse(
 data class AllSchedulesResponse(
     val message: String,
     val schedules: List<Schedule>
+)
+
+data class DeviceResponse(
+    val message: String,
+    val device: GeneralDevice
+)
+data class DevicesResponse(
+    val message: String,
+    val devices: List<GeneralDevice>
 )
