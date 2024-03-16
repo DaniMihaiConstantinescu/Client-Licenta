@@ -41,6 +41,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.testapp.ui.homepage.home.common.AddButtonRow
 import com.example.testapp.ui.homepage.home.common.DeviceWithSettingsCard
+import com.example.testapp.ui.homepage.home.common.RenderDeviceSettings
 import com.example.testapp.utils.dataClasses.general.Device
 import com.example.testapp.utils.dataClasses.general.GeneralDevice
 import com.example.testapp.utils.viewModels.homeScreen.Scenes.SceneAddDeveciViewModel
@@ -276,32 +277,31 @@ fun AddDialogPage2(
         ) {
             Column(
                 modifier = Modifier
-                    .fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
+                    .fillMaxSize()
+                    .padding(horizontal = 20.dp, vertical = 10.dp),
+                verticalArrangement = Arrangement.SpaceBetween,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Text(
-                    text = selectedDevice.name,
-                    modifier = Modifier.padding(16.dp),
-                )
+                
+                RenderDeviceSettings(device = selectedDevice)
+
                 Row(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
+                    horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     TextButton(
                         onClick = { onDismissRequest() },
-                        modifier = Modifier.padding(8.dp),
                     ) {
                         Text("Cancel")
                     }
                     TextButton(
                         onClick = { onConfirmation() },
-                        modifier = Modifier.padding(8.dp),
                     ) {
                         Text("Confirm")
                     }
                 }
+
             }
         }
     }
