@@ -1,5 +1,7 @@
 package com.example.testapp.ui.homepage.home.scenes
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -33,6 +35,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -55,7 +58,7 @@ fun SceneScreen(sceneId: String){
         factory = object: ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 return SceneViewModel(
-                    sceneId = sceneId
+                    sceneId = sceneId,
                 ) as T
             }
         }
@@ -66,7 +69,7 @@ fun SceneScreen(sceneId: String){
     var showAddDialog1 by remember { mutableStateOf(false) }
     var showAddDialog2 by remember { mutableStateOf(false) }
     var selectedAddDevice by remember { mutableStateOf(GeneralDevice(
-        deviceMac = "",
+        deviceMAC = "",
         hubMac = "",
         name = "",
         type = ""
@@ -86,7 +89,6 @@ fun SceneScreen(sceneId: String){
             Text(text = scene.sceneName, style = MaterialTheme.typography.headlineMedium)
         }
         TextField(
-
             modifier = Modifier
                 .clickable { }
                 .fillMaxWidth()
@@ -113,7 +115,15 @@ fun SceneScreen(sceneId: String){
         if (showAddDialog2){
             AddDialogPage2(
                 onDismissRequest = { showAddDialog2 = false },
-                onConfirmation = {showAddDialog2 = false},
+                onConfirmation = { settings ->
+                    showAddDialog2 = false
+                    sceneViewModel.addDeviceToScene(
+                        newDevice = Device(
+                            selectedAddDevice.deviceMAC,
+                            settings,
+                        )
+                    )
+                },
                 selectedDevice = selectedAddDevice
             )
         }
@@ -155,7 +165,11 @@ fun DeviceColumn(devices: List<Device>, sceneViewModel: SceneViewModel) {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         IconButton(
-                            onClick = { /*TODO*/ },
+                            onClick =
+                            {
+                                // call delete device from vm with scene and deviceid
+                                sceneViewModel.deleteDevice(device.macAddress)
+                            },
                             modifier = Modifier
                                 .background(
                                     MaterialTheme.colorScheme.surfaceVariant,
@@ -165,7 +179,7 @@ fun DeviceColumn(devices: List<Device>, sceneViewModel: SceneViewModel) {
                         ) {
                             Icon(
                                 imageVector = Icons.Outlined.Delete,
-                                contentDescription = "Delete deviece",
+                                contentDescription = "Delete device",
                             )
                         }
                         Spacer(modifier = Modifier.width(10.dp))
@@ -264,9 +278,12 @@ fun AddDialogPage1(
 @Composable
 fun AddDialogPage2(
     onDismissRequest: () -> Unit,
-    onConfirmation: () -> Unit,
+    onConfirmation: (settings: Map<String, String>) -> Unit,
     selectedDevice: GeneralDevice
 ) {
+    var settings by remember { mutableStateOf<Map<String, String>>(emptyMap())}
+    val context = LocalContext.current
+
     Dialog(onDismissRequest = { onDismissRequest() }) {
         Card(
             modifier = Modifier
@@ -282,8 +299,13 @@ fun AddDialogPage2(
                 verticalArrangement = Arrangement.SpaceBetween,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                
-                RenderDeviceSettings(device = selectedDevice)
+
+                RenderDeviceSettings(
+                    device = selectedDevice,
+                    updateSettings = { newSettings ->
+                        settings = newSettings
+                    }
+                )
 
                 Row(
                     modifier = Modifier
@@ -296,7 +318,13 @@ fun AddDialogPage2(
                         Text("Cancel")
                     }
                     TextButton(
-                        onClick = { onConfirmation() },
+                        onClick =
+                        {
+                            if (settings.isEmpty()){
+                                Toast.makeText(context, "Select a setting!", Toast.LENGTH_SHORT).show()
+                            }else
+                                onConfirmation(settings)
+                        },
                     ) {
                         Text("Confirm")
                     }

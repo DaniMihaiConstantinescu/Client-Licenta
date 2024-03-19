@@ -1,6 +1,5 @@
 package com.example.testapp.ui.homepage.home.common
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,9 +8,9 @@ import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Slider
-import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,8 +24,20 @@ import androidx.compose.ui.unit.dp
 import com.example.testapp.utils.dataClasses.general.GeneralDevice
 import java.util.Locale
 
+
+enum class Types(val type:String, val setting: String){
+    AC("ac", "Temperature"),
+    DEHUMIDIFIER("dehumidifier", "Humidity"),
+    LIGHT("light", "ON/OFF"),
+    SHUTTER("shutter", "UP/DOWN"),
+    SPRINKLER("sprinkler", "")
+}
+
 @Composable
-fun RenderDeviceSettings(device: GeneralDevice){
+fun RenderDeviceSettings(
+    device: GeneralDevice,
+    updateSettings: (newSettings: Map<String,String>) -> Unit
+){
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -41,18 +52,23 @@ fun RenderDeviceSettings(device: GeneralDevice){
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(top = 8.dp, bottom = 8.dp)
         )
-        SettingsRederer(device = device)
+        SettingsRederer(device = device, updateSettings)
     }
 }
 
 @Composable
-fun SettingsRederer(device: GeneralDevice){
-
-//    return
-
+fun SettingsRederer(
+    device: GeneralDevice,
+    updateSettings: (settings: Map<String,String>) -> Unit
+){
     when (device.type){
-
         Types.AC.type -> {
+
+            LaunchedEffect(Unit) {
+                updateSettings(mapOf("temperature" to "18"))
+            }
+            var sliderPosition by remember { mutableStateOf(18f) }
+
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -60,11 +76,14 @@ fun SettingsRederer(device: GeneralDevice){
             ) {
                 Text(text = Types.AC.setting)
 
-                var sliderPosition by remember { mutableStateOf(18f) }
                 Column {
                     Slider(
                         value = sliderPosition,
-                        onValueChange = { sliderPosition = it },
+                        onValueChange =
+                        {
+                            sliderPosition = it
+                            updateSettings(mapOf("temperature" to sliderPosition.toString()))
+                        },
                         steps = 19,
                         valueRange = 18f..28f,
                     )
@@ -78,16 +97,25 @@ fun SettingsRederer(device: GeneralDevice){
             }
         }
         Types.DEHUMIDIFIER.type -> {
+
+            LaunchedEffect(Unit) {
+                updateSettings(mapOf("humidity" to "30"))
+            }
+            var sliderPosition by remember { mutableStateOf(30) }
+
             Column(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(text = Types.DEHUMIDIFIER.setting)
 
-                var sliderPosition by remember { mutableStateOf(30) }
                 Column {
                     Slider(
                         value = sliderPosition.toFloat(),
-                        onValueChange = { sliderPosition = it.toInt() },
+                        onValueChange =
+                        {
+                            sliderPosition = it.toInt()
+                            updateSettings(mapOf("humidity" to it.toInt().toString()))
+                        },
                         steps = 4,
                         valueRange = 30f..80f,
                     )
@@ -114,7 +142,11 @@ fun SettingsRederer(device: GeneralDevice){
                     ) {
                         RadioButton(
                             selected = selectedButton == "ON",
-                            onClick = { selectedButton = "ON" },
+                            onClick =
+                            {
+                                selectedButton = "ON"
+                                updateSettings(mapOf("state" to "on"))
+                            },
                             modifier = Modifier.semantics { contentDescription = "ON" }
                         )
                         Text(text = "ON")
@@ -126,7 +158,11 @@ fun SettingsRederer(device: GeneralDevice){
                     ){
                         RadioButton(
                             selected = selectedButton == "OFF",
-                            onClick = { selectedButton = "OFF" },
+                            onClick =
+                            {
+                                selectedButton = "OFF"
+                                updateSettings(mapOf("state" to "off"))
+                            },
                             modifier = Modifier.semantics { contentDescription = "OFF" }
                         )
                         Text(text = "OFF")
@@ -148,7 +184,11 @@ fun SettingsRederer(device: GeneralDevice){
                     ) {
                         RadioButton(
                             selected = selectedButton == "UP",
-                            onClick = { selectedButton = "UP" },
+                            onClick =
+                            {
+                                selectedButton = "UP"
+                                updateSettings(mapOf("state" to "up"))
+                            },
                             modifier = Modifier.semantics { contentDescription = "UP" }
                         )
                         Text(text = "UP")
@@ -160,7 +200,11 @@ fun SettingsRederer(device: GeneralDevice){
                     ){
                         RadioButton(
                             selected = selectedButton == "DOWN",
-                            onClick = { selectedButton = "DOWN" },
+                            onClick =
+                            {
+                                selectedButton = "DOWN"
+                                updateSettings(mapOf("state" to "down"))
+                            },
                             modifier = Modifier.semantics { contentDescription = "DOWN" }
                         )
                         Text(text = "DOWN")
@@ -170,13 +214,4 @@ fun SettingsRederer(device: GeneralDevice){
         }
 
     }
-}
-
-
-enum class Types(val type:String, val setting: String){
-    AC("ac", "Temperature"),
-    DEHUMIDIFIER("dehumifier", "Humidity"),
-    LIGHT("light", "ON/OFF"),
-    SHUTTER("shutter", "UP/DOWM"),
-    SPRINKLER("sprinkler", "")
 }

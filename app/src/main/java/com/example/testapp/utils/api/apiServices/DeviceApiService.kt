@@ -2,6 +2,8 @@ package com.example.testapp.utils.api.apiServices
 
 import com.example.testapp.utils.api.DeviceResponse
 import com.example.testapp.utils.api.DevicesResponse
+import com.example.testapp.utils.dataClasses.general.Device
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -13,5 +15,4 @@ interface DeviceApiService {
     suspend fun getDevicesNotInList(@Body devices: List<String>): DevicesResponse
     @GET("/$mainResource/{deviceId}")
     suspend fun getDevice(@Path("userId") userId: String, @Path("deviceId") sceneId: String): DeviceResponse
-
 }
