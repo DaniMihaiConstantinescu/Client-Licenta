@@ -41,7 +41,7 @@ fun AllScenesScreen(navController: NavController) {
         ) {
             Text(text = "Scenes", style = MaterialTheme.typography.headlineMedium)
         }
-        AddButtonRow(onClick = { }, text = "Add Scene")
+        AddButtonRow(onClick = { navController.navigate("addScene") }, text = "Add Scene")
         ScenesRow(navController = navController)
     }
 

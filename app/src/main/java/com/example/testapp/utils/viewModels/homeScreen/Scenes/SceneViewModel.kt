@@ -37,16 +37,17 @@ class SceneViewModel(
         }
     }
 
-    fun updateName(newName: String){
-
-    }
     fun addDeviceToScene(newDevice: Device) {
         viewModelScope.launch {
             try {
                 // Make the API call to add the device to the scene
-                RetrofitClient.sceneService.addDeviceToScene("1", sceneId, newDevice)
-                val updatedScene = scene.copy(devices = scene.devices + newDevice)
-                scene = updatedScene
+                val response = RetrofitClient.sceneService.addDeviceToScene("1", sceneId, newDevice)
+                if (response.isSuccessful) {
+                    val updatedScene = scene.copy(devices = scene.devices + newDevice)
+                    scene = updatedScene
+                } else {
+                    Log.e("ADD DEVICE ERROR", "HTTP Error: ${response.code()}")
+                }
             } catch (e: HttpException) {
                 if (e.code() == 404) {
                     Log.e("ADD DEVICE ERROR", "Device not found")
@@ -58,20 +59,28 @@ class SceneViewModel(
             }
         }
     }
-    fun deleteDevice(deviceId: String){
+    fun deleteDevice(deviceId: String) {
         viewModelScope.launch {
             try {
-                RetrofitClient.sceneService.deleteDeviceFromScene("1", sceneId, deviceId)
+                val response = RetrofitClient.sceneService.deleteDeviceFromScene("1", sceneId, deviceId)
+                if (response.isSuccessful) {
+                    // Remove the device from the list
+                    val updatedDevices = scene.devices.filter { it.macAddress != deviceId }
+                    scene = scene.copy(devices = updatedDevices)
+                } else {
+                    Log.e("DELETE DEVICE ERROR", "HTTP Error: ${response.code()}")
+                }
             } catch (e: HttpException) {
                 if (e.code() == 404) {
-                    Log.e("ADD DEVICE ERROR", "Device not found")
+                    Log.e("DELETE DEVICE ERROR", "Device not found")
                 } else {
-                    Log.e("ADD DEVICE ERROR", "HTTP Error")
+                    Log.e("DELETE DEVICE ERROR", "HTTP Error")
                 }
             } catch (e: Exception) {
-                Log.e("ADD DEVICE ERROR", "Server Error")
+                Log.e("DELETE DEVICE ERROR", "Server Error")
             }
         }
     }
+
 
 }

@@ -5,6 +5,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.testapp.ui.homepage.home.scenes.AddSceneScreen
 import com.example.testapp.ui.homepage.mainScreens.HomeScreen
 import com.example.testapp.ui.homepage.mainScreens.RoomsScreen
 import com.example.testapp.ui.homepage.mainScreens.SettingsScreen
@@ -28,6 +29,9 @@ fun BottomNavGraph(navController: NavController){
         }
         composable(route = "allScenes"){
             AllScenesScreen(navController)
+        }
+        composable(route = "addScene"){
+            AddSceneScreen(navController)
         }
         composable(route = "scene/{sceneId}") { backStackEntry ->
             val sceneId = backStackEntry.arguments?.getString("sceneId")

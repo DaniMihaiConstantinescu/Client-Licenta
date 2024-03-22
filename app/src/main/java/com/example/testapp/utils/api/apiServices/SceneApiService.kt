@@ -1,12 +1,9 @@
 package com.example.testapp.utils.api.apiServices
 
-import android.util.Log
 import com.example.testapp.utils.api.AllScenesResponse
-import com.example.testapp.utils.api.RetrofitClient
 import com.example.testapp.utils.api.SceneResponse
 import com.example.testapp.utils.dataClasses.general.Device
-import okhttp3.ResponseBody
-import retrofit2.Call
+import com.example.testapp.utils.dataClasses.homeScreen.SceneToCreate
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -23,13 +20,20 @@ interface SceneApiService {
     suspend fun getTopScenes(@Path("userId") userId: String): AllScenesResponse
     @GET("/$mainResource/{userId}/{sceneId}")
     suspend fun getScene(@Path("userId") userId: String, @Path("sceneId") sceneId: String): SceneResponse
-    @POST("/$mainResource/{userId}/{sceneId}/add-device")
+
+    @POST("/$mainResource/{userId}")
+    suspend fun createScene(
+        @Path("userId") userId: String,
+        @Body scene: SceneToCreate
+    ): Response<Void>
+
+    @POST("/$mainResource/add-device/{userId}/{sceneId}")
     suspend fun addDeviceToScene(
         @Path("userId") userId: String,
         @Path("sceneId") sceneId: String,
         @Body newDevice: Device
     ): Response<Void>
-    @DELETE("/$mainResource/{userId}/{sceneId}/{macAddress}")
+    @DELETE("/$mainResource/remove-device/{userId}/{sceneId}/{macAddress}")
     suspend fun deleteDeviceFromScene(
         @Path("userId") userId: String,
         @Path("sceneId") sceneId: String,
