@@ -10,7 +10,7 @@ import com.example.testapp.utils.api.RetrofitClient
 import com.example.testapp.utils.dataClasses.general.GeneralDevice
 import kotlinx.coroutines.launch
 
-class SceneAddDeveciViewModel(
+class SceneAddDeviceViewModel(
     private val devicesInScene: List<String>
 ): ViewModel() {
 

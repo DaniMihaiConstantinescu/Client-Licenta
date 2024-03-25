@@ -1,4 +1,4 @@
-package com.example.testapp.utils.viewModels.homeScreen
+package com.example.testapp.utils.viewModels.homeScreen.Schedules
 
 import android.util.Log
 import androidx.compose.runtime.getValue
@@ -7,13 +7,14 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.testapp.utils.api.RetrofitClient
-import com.example.testapp.utils.dataClasses.general.Device
-import com.example.testapp.utils.dataClasses.homeScreen.Schedule
+import com.example.testapp.utils.dataClasses.general.GeneralDevice
 import kotlinx.coroutines.launch
 
-class HomeScheduleViewModel: ViewModel(){
+class ScheduleAddDeviceViewModel(
+    private val devicesInSchedule: List<String>
+): ViewModel() {
 
-    var topSchedules by mutableStateOf<List<Schedule>>(emptyList())
+    var devices by mutableStateOf<List<GeneralDevice>>(emptyList())
         private set
     var isLoading by mutableStateOf(false)
         private set
@@ -22,11 +23,10 @@ class HomeScheduleViewModel: ViewModel(){
         viewModelScope.launch {
             try {
                 isLoading = true
-                val response = RetrofitClient.scheduleService.getTopSchedules("1")
-                // verify if it has scenes
-                val schedules = response.schedules
-                topSchedules = schedules ?: emptyList()
+                val response = RetrofitClient.deviceService.getDevicesNotInList(devicesInSchedule)
+                // verify if it has schedules
                 isLoading = false
+                devices = response.devices ?: emptyList<GeneralDevice>()
             } catch (e: Exception) {
                 // Handle network errors
                 Log.e("API Request", "Error: ${e.message}", e)
@@ -34,13 +34,4 @@ class HomeScheduleViewModel: ViewModel(){
             }
         }
     }
-
-    fun toggleSchedule(userId: String, scheduleId: String){
-        // call API
-        return
-    }
-
 }
-
-
-

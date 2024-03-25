@@ -1,13 +1,15 @@
-package com.example.testapp.ui.homepage.home.scenes
+package com.example.testapp.ui.homepage.home.schedules
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -28,12 +30,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.testapp.ui.homepage.home.SceneCard
+import com.example.testapp.ui.homepage.home.ScheduleCard
 import com.example.testapp.ui.homepage.home.common.AddButtonRow
-import com.example.testapp.utils.viewModels.homeScreen.Scenes.AllScenesViewModel
+import com.example.testapp.utils.viewModels.homeScreen.Schedules.AllSchedulesViewModel
 
 @Composable
-fun AllScenesScreen(navController: NavController) {
+fun AllSchedulesScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -45,25 +47,25 @@ fun AllScenesScreen(navController: NavController) {
                 .padding(top = 35.dp, bottom = 20.dp),
             horizontalArrangement = Arrangement.Center
         ) {
-            Text(text = "Scenes", style = MaterialTheme.typography.headlineMedium)
+            Text(text = "Schedules", style = MaterialTheme.typography.headlineMedium)
         }
-        AddButtonRow(onClick = { navController.navigate("addScene") }, text = "Add Scene")
-        ScenesRow(navController = navController)
+        AddButtonRow(onClick = { navController.navigate("addSchedule") }, text = "Add Schedule")
+        SchedulesRow(navController = navController)
     }
 
 }
 
 @Composable
-fun ScenesRow(navController: NavController){
+fun SchedulesRow(navController: NavController){
 
-    val sceneViewModel = viewModel<AllScenesViewModel>()
+    val scheduleViewModel = viewModel<AllSchedulesViewModel>()
 
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
             .padding(bottom = 10.dp, top = 10.dp)
     ) {
-        if (sceneViewModel.isLoading){
+        if (scheduleViewModel.isLoading){
             item {
                 Box(
                     modifier = Modifier.fillMaxWidth(),
@@ -75,10 +77,10 @@ fun ScenesRow(navController: NavController){
                 }
             }
         }else
-            if (sceneViewModel.allScenes.isEmpty()){
+            if (scheduleViewModel.allSchedules.isEmpty()){
                 item{
                     Text(
-                        text = "There is no scene created yet!",
+                        text = "There is no schedule created yet!",
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(
@@ -91,7 +93,7 @@ fun ScenesRow(navController: NavController){
                     )
                 }
             }else {
-                items(sceneViewModel.allScenes) { scene ->
+                items(scheduleViewModel.allSchedules) { schedule ->
 
                     Row(
                         modifier = Modifier
@@ -102,23 +104,22 @@ fun ScenesRow(navController: NavController){
                     ) {
                         IconButton(
                             onClick = {
-                                sceneViewModel.deleteScene(scene.sceneId)
+                                scheduleViewModel.deleteSchedule(schedule.scheduleId)
                             },
                             modifier = Modifier
                                 .background(
                                     MaterialTheme.colorScheme.surfaceVariant,
                                     shape = RoundedCornerShape(16)
                                 )
-                                .size(62.dp)
                         ) {
                             Icon(
                                 imageVector = Icons.Outlined.Delete,
-                                contentDescription = "Delete Scene",
+                                contentDescription = "Delete Schedule",
                             )
                         }
                         Spacer(modifier = Modifier.width(10.dp))
 
-                        SceneCard(scene, navController = navController)
+                        ScheduleCard(schedule, navController = navController)
                     }
 
 

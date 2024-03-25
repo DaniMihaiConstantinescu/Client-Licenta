@@ -11,6 +11,9 @@ import com.example.testapp.ui.homepage.mainScreens.RoomsScreen
 import com.example.testapp.ui.homepage.mainScreens.SettingsScreen
 import com.example.testapp.ui.homepage.home.scenes.AllScenesScreen
 import com.example.testapp.ui.homepage.home.scenes.SceneScreen
+import com.example.testapp.ui.homepage.home.schedules.AddScheduleScreen
+import com.example.testapp.ui.homepage.home.schedules.AllSchedulesScreen
+import com.example.testapp.ui.homepage.home.schedules.ScheduleScreen
 
 @Composable
 fun BottomNavGraph(navController: NavController){
@@ -38,6 +41,19 @@ fun BottomNavGraph(navController: NavController){
             sceneId?.let { id ->
                 // Pass the scene ID to the SceneScreen
                 SceneScreen(sceneId = id)
+            }
+        }
+        composable(route = "allSchedules"){
+            AllSchedulesScreen(navController)
+        }
+        composable(route = "addSchedule"){
+            AddScheduleScreen(navController)
+        }
+        composable(route = "schedule/{scheduleId}") { backStackEntry ->
+            val scheduleId = backStackEntry.arguments?.getString("scheduleId")
+            scheduleId?.let { id ->
+                // Pass the scene ID to the SceneScreen
+                ScheduleScreen(scheduleId = id)
             }
         }
     }

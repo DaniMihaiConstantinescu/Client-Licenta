@@ -17,7 +17,7 @@ import com.example.testapp.utils.dataClasses.general.Device
 import com.example.testapp.utils.viewModels.homeScreen.Scenes.SceneViewModel
 
 @Composable
-fun DeviceWithSettingsCard(device: Device, sceneViewModel: SceneViewModel){
+fun DeviceWithSettingsCard(device: Device){
 
     Card(
         modifier = Modifier

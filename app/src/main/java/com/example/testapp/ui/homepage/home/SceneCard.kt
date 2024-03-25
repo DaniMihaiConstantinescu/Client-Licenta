@@ -1,5 +1,6 @@
 package com.example.testapp.ui.homepage.home
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -17,19 +18,27 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.testapp.utils.dataClasses.homeScreen.Scene
+import com.example.testapp.utils.viewModels.homeScreen.Scenes.SceneCardViewModel
+import kotlinx.coroutines.coroutineScope
 
 @Composable
-fun SceneCard(scene: Scene, navController: NavController) {
+fun SceneCard(
+    scene: Scene,
+    navController: NavController
+) {
     var checked by remember { mutableStateOf(scene.isActive) }
+    val sceneViewModel = viewModel<SceneCardViewModel>()
+    var context = LocalContext.current
 
     Card(
         modifier = Modifier
-            .clickable{ navController.navigate("scene/${scene.sceneId}") }
+            .clickable { navController.navigate("scene/${scene.sceneId}") }
             .fillMaxWidth()
-            .padding(bottom = 8.dp)
     ) {
         Row(
             modifier = Modifier
@@ -42,9 +51,16 @@ fun SceneCard(scene: Scene, navController: NavController) {
             Switch(
                 checked = checked,
                 onCheckedChange = {
-                    checked = it
+                    sceneViewModel.toggleScene(scene.sceneId) { success ->
+                        if (success) {
+                            checked = it
+                        } else {
+                            Toast.makeText(context, "An error occurred while toggling the scene ", Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 }
             )
         }
     }
+
 }

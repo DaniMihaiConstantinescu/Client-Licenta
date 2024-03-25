@@ -1,4 +1,4 @@
-package com.example.testapp.ui.homepage.home.scenes
+package com.example.testapp.ui.homepage.home.schedules
 
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -46,33 +46,35 @@ import com.example.testapp.ui.homepage.home.common.DeviceWithSettingsCard
 import com.example.testapp.ui.homepage.home.common.RenderDeviceSettings
 import com.example.testapp.utils.dataClasses.general.Device
 import com.example.testapp.utils.dataClasses.general.GeneralDevice
-import com.example.testapp.utils.viewModels.homeScreen.Scenes.SceneAddDeviceViewModel
-import com.example.testapp.utils.viewModels.homeScreen.Scenes.SceneViewModel
+import com.example.testapp.utils.viewModels.homeScreen.Schedules.ScheduleAddDeviceViewModel
+import com.example.testapp.utils.viewModels.homeScreen.Schedules.ScheduleViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SceneScreen(sceneId: String){
+fun ScheduleScreen(scheduleId: String){
 
-    val sceneViewModel = viewModel<SceneViewModel>(
+    val scheduleViewModel = viewModel<ScheduleViewModel>(
         factory = object: ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return SceneViewModel(
-                    sceneId = sceneId,
+                return ScheduleViewModel(
+                    scheduleId = scheduleId,
                 ) as T
             }
         }
     )
-    val scene = sceneViewModel.scene
+    val schedule = scheduleViewModel.schedule
     var text by rememberSaveable { mutableStateOf("") }
 
     var showAddDialog1 by remember { mutableStateOf(false) }
     var showAddDialog2 by remember { mutableStateOf(false) }
-    var selectedAddDevice by remember { mutableStateOf(GeneralDevice(
+    var selectedAddDevice by remember { mutableStateOf(
+        GeneralDevice(
         deviceMAC = "",
         hubMac = "",
         name = "",
         type = ""
-    )) }
+    )
+    ) }
 
     Column(
         modifier = Modifier
@@ -85,7 +87,7 @@ fun SceneScreen(sceneId: String){
                 .padding(top = 35.dp, bottom = 20.dp),
             horizontalArrangement = Arrangement.Center
         ) {
-            Text(text = scene.sceneName, style = MaterialTheme.typography.headlineMedium)
+            Text(text = schedule.scheduleName, style = MaterialTheme.typography.headlineMedium)
         }
         TextField(
             modifier = Modifier
@@ -94,15 +96,15 @@ fun SceneScreen(sceneId: String){
                 .padding(bottom = 16.dp),
             value = text,
             onValueChange = { text = it },
-            label = { Text("Scene Name") },
+            label = { Text("Schedule Name") },
             singleLine = true
         )
         AddButtonRow(onClick = { showAddDialog1 = true }, text = "Add Device")
-        DeviceColumn(scene.devices, sceneViewModel)
+        DeviceColumn(schedule.devices, scheduleViewModel)
 
         if (showAddDialog1) {
             AddDialogPage1(
-                devicesInScene = scene.devices,
+                devicesInSchedule = schedule.devices,
                 onDismissRequest = { showAddDialog1 = false },
                 onConfirmation = { addDevice ->
                     showAddDialog1 = false
@@ -116,7 +118,7 @@ fun SceneScreen(sceneId: String){
                 onDismissRequest = { showAddDialog2 = false },
                 onConfirmation = { settings ->
                     showAddDialog2 = false
-                    sceneViewModel.addDeviceToScene(
+                    scheduleViewModel.addDeviceToSchedule(
                         newDevice = Device(
                             selectedAddDevice.deviceMAC,
                             settings,
@@ -132,7 +134,7 @@ fun SceneScreen(sceneId: String){
 }
 
 @Composable
-fun DeviceColumn(devices: List<Device>, sceneViewModel: SceneViewModel) {
+fun DeviceColumn(devices: List<Device>, scheduleViewModel: ScheduleViewModel) {
 
     LazyColumn(
         modifier = Modifier
@@ -157,34 +159,34 @@ fun DeviceColumn(devices: List<Device>, sceneViewModel: SceneViewModel) {
             }
         }else {
             items(devices) { device ->
-                    if (device != null )
-                        Row(
+                if (device != null )
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 10.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        IconButton(
+                            onClick =
+                            {
+                                // call delete device from vm with schedule and deviceId
+                                scheduleViewModel.deleteDevice(device.macAddress)
+                            },
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = 10.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            IconButton(
-                                onClick =
-                                {
-                                    // call delete device from vm with scene and deviceid
-                                    sceneViewModel.deleteDevice(device.macAddress)
-                                },
-                                modifier = Modifier
-                                    .background(
-                                        MaterialTheme.colorScheme.surfaceVariant,
-                                        shape = RoundedCornerShape(16)
-                                    )
-                                    .size(56.dp)
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Outlined.Delete,
-                                    contentDescription = "Delete device",
+                                .background(
+                                    MaterialTheme.colorScheme.surfaceVariant,
+                                    shape = RoundedCornerShape(16)
                                 )
-                            }
-                            Spacer(modifier = Modifier.width(10.dp))
-                            DeviceWithSettingsCard(device)
+                                .size(56.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.Delete,
+                                contentDescription = "Delete device",
+                            )
                         }
+                        Spacer(modifier = Modifier.width(10.dp))
+                        DeviceWithSettingsCard(device)
+                    }
             }
         }
     }
@@ -194,16 +196,16 @@ fun DeviceColumn(devices: List<Device>, sceneViewModel: SceneViewModel) {
 
 @Composable
 fun AddDialogPage1(
-    devicesInScene: List<Device>,
+    devicesInSchedule: List<Device>,
     onDismissRequest: () -> Unit,
     onConfirmation: (device: GeneralDevice) -> Unit,
 ) {
-    val deviceMacAddresses: List<String> = devicesInScene.mapNotNull { it?.macAddress }
-    val devicesNotIn = viewModel<SceneAddDeviceViewModel>(
+    val deviceMacAddresses: List<String> = devicesInSchedule.mapNotNull { it?.macAddress }
+    val devicesNotIn = viewModel<ScheduleAddDeviceViewModel>(
         factory = object: ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return SceneAddDeviceViewModel(
-                    devicesInScene = deviceMacAddresses
+                return ScheduleAddDeviceViewModel(
+                    devicesInSchedule = deviceMacAddresses
                 ) as T
             }
         }
@@ -280,7 +282,7 @@ fun AddDialogPage2(
     onConfirmation: (settings: Map<String, String>) -> Unit,
     selectedDevice: GeneralDevice
 ) {
-    var settings by remember { mutableStateOf<Map<String, String>>(emptyMap())}
+    var settings by remember { mutableStateOf<Map<String, String>>(emptyMap()) }
     val context = LocalContext.current
 
     Dialog(onDismissRequest = { onDismissRequest() }) {

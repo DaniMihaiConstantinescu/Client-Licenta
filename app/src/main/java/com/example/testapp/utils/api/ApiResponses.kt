@@ -15,7 +15,7 @@ data class SceneResponse(
 
 data class ScheduleResponse(
     val message: String,
-    val schedules: Map<String, Schedule>
+    val schedule: Schedule
 )
 data class AllSchedulesResponse(
     val message: String,

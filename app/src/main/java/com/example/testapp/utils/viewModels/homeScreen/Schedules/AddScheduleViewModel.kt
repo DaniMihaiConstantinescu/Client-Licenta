@@ -1,27 +1,31 @@
-package com.example.testapp.utils.viewModels.homeScreen.Scenes
+package com.example.testapp.utils.viewModels.homeScreen.Schedules
 
-import android.content.Context
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavController
 import com.example.testapp.utils.api.RetrofitClient
 import com.example.testapp.utils.dataClasses.general.Device
 import com.example.testapp.utils.dataClasses.general.GeneralDevice
-import com.example.testapp.utils.dataClasses.homeScreen.Scene
-import com.example.testapp.utils.dataClasses.homeScreen.SceneToCreate
+import com.example.testapp.utils.dataClasses.homeScreen.Schedule
+import com.example.testapp.utils.dataClasses.homeScreen.ScheduleToCreate
 import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
-import retrofit2.HttpException
 import retrofit2.Response
 
-class AddSceneViewModel: ViewModel() {
+class AddScheduleViewModel: ViewModel() {
 
-    var scene by mutableStateOf(Scene(devices = emptyList(), isActive = false, sceneId = "", sceneName = ""))
+    var schedule by mutableStateOf(Schedule(
+        devices = emptyList(),
+        isActive = false,
+        scheduleId = "",
+        scheduleName = "",
+        days = emptyList(),
+        from = "",
+        until = ""
+    ))
         private set
     var devicesToAdd by mutableStateOf(emptyList<GeneralDevice>())
         private set
@@ -40,7 +44,7 @@ class AddSceneViewModel: ViewModel() {
         return try {
             isLoading = true
             val response = RetrofitClient.hubService.getAllDevices("1")
-            // verify if it has scenes
+            // verify if it has schedules
             isLoading = false
             response.devices
         } catch (e: Exception) {
@@ -49,27 +53,36 @@ class AddSceneViewModel: ViewModel() {
             emptyList()
         }
     }
-    fun addDeviceToScene(newDevice: Device) {
-        val updatedScene = scene.copy(devices = scene.devices + newDevice)
-        scene = updatedScene
+    fun addDeviceToSchedule(newDevice: Device) {
+        val updatedSchedule = schedule.copy(devices = schedule.devices + newDevice)
+        schedule = updatedSchedule
     }
     fun deleteDevice(deviceId: String) {
-        val updatedDevices = scene.devices.filter { it.macAddress != deviceId }
-        scene = scene.copy(devices = updatedDevices)
+        val updatedDevices = schedule.devices.filter { it.macAddress != deviceId }
+        schedule = schedule.copy(devices = updatedDevices)
     }
 
-    fun createScene(sceneName: String, callback: (Response<Void>) -> Unit) {
+    fun createSchedule(
+        scheduleName: String,
+        from: String,
+        until: String,
+        days: List<Int>,
+        callback: (Response<Void>) -> Unit
+    ) {
         viewModelScope.launch {
             try {
-                val response = RetrofitClient.sceneService.createScene(
+                val response = RetrofitClient.scheduleService.createSchedule(
                     "1",
-                    SceneToCreate(
-                        scene.devices,
-                        scene.isActive,
-                        sceneName
+                    ScheduleToCreate(
+                        schedule.devices,
+                        schedule.isActive,
+                        scheduleName,
+                        from,
+                        until,
+                        days
                     )
                 )
-                Log.e("CREATE SCENE ERROR", response.toString())
+                Log.e("CREATE SCHEDULE ERROR", response.toString())
                 responseCode = response
                 callback(response) // Invoke the callback with the response
             } catch (e: Exception) {
@@ -79,6 +92,5 @@ class AddSceneViewModel: ViewModel() {
             }
         }
     }
-
-
+    
 }

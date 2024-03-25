@@ -18,14 +18,26 @@ interface SceneApiService {
     suspend fun getAllScenes(@Path("userId") userId: String): AllScenesResponse
     @GET("/$mainResource/top3/{userId}")
     suspend fun getTopScenes(@Path("userId") userId: String): AllScenesResponse
+
+
     @GET("/$mainResource/{userId}/{sceneId}")
     suspend fun getScene(@Path("userId") userId: String, @Path("sceneId") sceneId: String): SceneResponse
-
     @POST("/$mainResource/{userId}")
     suspend fun createScene(
         @Path("userId") userId: String,
         @Body scene: SceneToCreate
     ): Response<Void>
+    @DELETE("/$mainResource/{userId}/{sceneId}")
+    suspend fun deleteScene(
+        @Path("userId") userId: String,
+        @Path("sceneId") sceneId: String,
+    ): Response<Void>
+    @POST("/$mainResource/toggle/{userId}/{sceneId}")
+    suspend fun toggleScene(
+        @Path("userId") userId: String,
+        @Path("sceneId") sceneId: String,
+    ): Response<Void>
+
 
     @POST("/$mainResource/add-device/{userId}/{sceneId}")
     suspend fun addDeviceToScene(
@@ -39,5 +51,4 @@ interface SceneApiService {
         @Path("sceneId") sceneId: String,
         @Path ("macAddress") macAddress: String
     ): Response<Void>
-
 }

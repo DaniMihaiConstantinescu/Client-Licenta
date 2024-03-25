@@ -1,5 +1,7 @@
 package com.example.testapp.ui.homepage.home
 
+import android.widget.Toast
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,17 +19,27 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.testapp.utils.dataClasses.homeScreen.Schedule
+import com.example.testapp.utils.viewModels.homeScreen.Scenes.SceneCardViewModel
+import com.example.testapp.utils.viewModels.homeScreen.Schedules.ScheduleCardViewModel
 
 @Composable
-fun ScheduleCard(schedule: Schedule) {
+fun ScheduleCard(
+    schedule: Schedule,
+    navController: NavController
+) {
     var checked by remember { mutableStateOf(schedule.isActive) }
+    val scheduleViewModel = viewModel<ScheduleCardViewModel>()
+    var context = LocalContext.current
 
     Card(
         modifier = Modifier
+            .clickable { navController.navigate("schedule/${schedule.scheduleId}") }
             .fillMaxWidth()
-            .padding(bottom = 10.dp)
     ) {
         Column(
             modifier = Modifier
@@ -43,7 +55,13 @@ fun ScheduleCard(schedule: Schedule) {
                 Switch(
                     checked = checked,
                     onCheckedChange = {
-                        checked = it
+                        scheduleViewModel.toggleSchedule(schedule.scheduleId) { success ->
+                            if (success) {
+                                checked = it
+                            } else {
+                                Toast.makeText(context, "An error occurred while toggling the schedule ", Toast.LENGTH_SHORT).show()
+                            }
+                        }
                     }
                 )
             }

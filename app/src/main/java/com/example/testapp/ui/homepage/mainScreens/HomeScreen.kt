@@ -6,8 +6,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -29,7 +31,7 @@ import androidx.navigation.NavController
 import com.example.testapp.ui.homepage.home.SceneCard
 import com.example.testapp.ui.homepage.home.ScheduleCard
 import com.example.testapp.utils.viewModels.homeScreen.Scenes.HomeSceneViewModel
-import com.example.testapp.utils.viewModels.homeScreen.HomeScheduleViewModel
+import com.example.testapp.utils.viewModels.homeScreen.Schedules.HomeScheduleViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -49,7 +51,7 @@ fun HomeScreen(navController: NavController) {
             ) {
             Column {
                 ScenePart(navController)
-                SchedulePart()
+                SchedulePart(navController)
             }
         }
     }
@@ -115,13 +117,14 @@ fun ScenePart(navController: NavController) {
             }else {
                 items(sceneViewModel.topScenes) { scene ->
                     SceneCard(scene, navController)
+                    Spacer(modifier = Modifier.height(8.dp) )
                 }
             }
     }
 }
 
 @Composable
-fun SchedulePart() {
+fun SchedulePart(navController: NavController) {
 
     val scheduleViewModel = viewModel<HomeScheduleViewModel>()
 
@@ -141,7 +144,7 @@ fun SchedulePart() {
             ) {
                 Text(text = "Schedule", style = MaterialTheme.typography.headlineSmall)
                 TextButton(
-                    onClick = { /*TODO*/ },
+                    onClick = { navController.navigate("allSchedules") },
                 ) {
                     Text(text = "All Schedules >", style = MaterialTheme.typography.bodyLarge)
                 }
@@ -178,7 +181,8 @@ fun SchedulePart() {
                 }
             }else {
                 items(scheduleViewModel.topSchedules) { schedule ->
-                    ScheduleCard(schedule)
+                    ScheduleCard(schedule, navController)
+                    Spacer(modifier = Modifier.height(10.dp))
                 }
             }
     }

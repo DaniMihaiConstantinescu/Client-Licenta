@@ -1,4 +1,4 @@
-package com.example.testapp.utils.viewModels.homeScreen.Scenes
+package com.example.testapp.utils.viewModels.homeScreen.Schedules
 
 import android.util.Log
 import androidx.compose.runtime.getValue
@@ -7,12 +7,12 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.testapp.utils.api.RetrofitClient
-import com.example.testapp.utils.dataClasses.homeScreen.Scene
+import com.example.testapp.utils.dataClasses.homeScreen.Schedule
 import kotlinx.coroutines.launch
 
-class HomeSceneViewModel: ViewModel(){
+class HomeScheduleViewModel: ViewModel(){
 
-    var topScenes by mutableStateOf<List<Scene>>(emptyList())
+    var topSchedules by mutableStateOf<List<Schedule>>(emptyList())
         private set
     var isLoading by mutableStateOf(false)
         private set
@@ -21,11 +21,11 @@ class HomeSceneViewModel: ViewModel(){
         viewModelScope.launch {
             try {
                 isLoading = true
-                val response = RetrofitClient.sceneService.getTopScenes("1")
+                val response = RetrofitClient.scheduleService.getTopSchedules("1")
                 // verify if it has scenes
-                val scenes = response.scenes
+                val schedules = response.schedules
+                topSchedules = schedules ?: emptyList()
                 isLoading = false
-                 topScenes = scenes ?: emptyList()
             } catch (e: Exception) {
                 // Handle network errors
                 Log.e("API Request", "Error: ${e.message}", e)
@@ -33,6 +33,12 @@ class HomeSceneViewModel: ViewModel(){
             }
         }
     }
+
+    fun toggleSchedule(userId: String, scheduleId: String){
+        // call API
+        return
+    }
+
 }
 
 
