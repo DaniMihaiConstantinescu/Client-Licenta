@@ -3,6 +3,7 @@ package com.example.testapp.utils.api
 import com.example.testapp.utils.dataClasses.general.GeneralDevice
 import com.example.testapp.utils.dataClasses.homeScreen.Scene
 import com.example.testapp.utils.dataClasses.homeScreen.Schedule
+import com.example.testapp.utils.dataClasses.roomsScreen.Room
 
 data class AllScenesResponse(
     val message: String,
@@ -29,4 +30,13 @@ data class DeviceResponse(
 data class DevicesResponse(
     val message: String,
     val devices: List<GeneralDevice>
+)
+
+data class AllRoomsResponse(
+    val message: String,
+    val rooms: List<Room>
+)
+data class RoomResponse(
+    val message: String,
+    val room: Room
 )
