@@ -28,8 +28,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.testapp.ui.homepage.home.SceneCard
-import com.example.testapp.ui.homepage.home.ScheduleCard
+import com.example.testapp.ui.homepage.home.scenes.SceneCard
+import com.example.testapp.ui.homepage.home.schedules.ScheduleCard
 import com.example.testapp.utils.viewModels.scenes.HomeSceneViewModel
 import com.example.testapp.utils.viewModels.homeScreen.Schedules.HomeScheduleViewModel
 

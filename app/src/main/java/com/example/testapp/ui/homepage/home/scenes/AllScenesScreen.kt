@@ -28,7 +28,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.testapp.ui.homepage.home.SceneCard
 import com.example.testapp.ui.homepage.home.common.AddButtonRow
 import com.example.testapp.utils.viewModels.scenes.AllScenesViewModel
 

@@ -7,9 +7,12 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.testapp.utils.api.RetrofitClient
-import com.example.testapp.utils.dataClasses.homeScreen.Room
+import com.example.testapp.utils.dataClasses.roomsScreen.Room
+import com.example.testapp.utils.dataClasses.roomsScreen.RoomToCreate
 import kotlinx.coroutines.launch
+import okhttp3.ResponseBody
 import retrofit2.HttpException
+import retrofit2.Response
 
 class AllRoomsViewModel: ViewModel() {
 
@@ -22,7 +25,7 @@ class AllRoomsViewModel: ViewModel() {
         viewModelScope.launch {
             try {
                 isLoading = true
-                val response = RetrofitClient.roomservice.getAllRooms("1")
+                val response = RetrofitClient.roomService.getAllRooms("1")
                 // verify if it has rooms
                 val rooms = response.rooms
                 isLoading = false
@@ -35,10 +38,43 @@ class AllRoomsViewModel: ViewModel() {
         }
     }
 
+    fun createRoom(roomName: String, callback: (Response<Void>) -> Unit){
+        viewModelScope.launch {
+            try {
+                val response = RetrofitClient.roomService.createRoom(
+                    "1",
+                    RoomToCreate(
+                        roomName = roomName,
+                        devices = emptyList()
+                    )
+                )
+                callback(response)
+            } catch (e: Exception) {
+                // Handle exceptions
+                Log.e("API Request", "Error: ${e.message}", e)
+                callback(Response.error(500, ResponseBody.create(null, "Internal Server Error"))) // Return error response
+            }
+        }
+    }
+
+    fun refreshRooms(){
+        viewModelScope.launch {
+            try {
+                val response = RetrofitClient.roomService.getAllRooms("1")
+                // verify if it has rooms
+                val rooms = response.rooms
+                allRooms = rooms ?: emptyList()
+            } catch (e: Exception) {
+                // Handle network errors
+                Log.e("API Request", "Error: ${e.message}", e)
+            }
+        }
+    }
+
     fun deleteRoom(roomId: String) {
         viewModelScope.launch {
             try {
-                val response = RetrofitClient.roomservice.deleteRoom("1", roomId)
+                val response = RetrofitClient.roomService.deleteRoom("1", roomId)
                 if (response.isSuccessful) {
                     allRooms = allRooms.filter { it.roomId != roomId }
                 } else {

@@ -1,10 +1,13 @@
 package com.example.testapp.ui.homepage
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.testapp.ui.homepage.home.rooms.RoomScreen
 import com.example.testapp.ui.homepage.home.scenes.AddSceneScreen
 import com.example.testapp.ui.homepage.mainScreens.HomeScreen
 import com.example.testapp.ui.homepage.mainScreens.RoomsScreen
@@ -15,6 +18,7 @@ import com.example.testapp.ui.homepage.home.schedules.AddScheduleScreen
 import com.example.testapp.ui.homepage.home.schedules.AllSchedulesScreen
 import com.example.testapp.ui.homepage.home.schedules.ScheduleScreen
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun BottomNavGraph(navController: NavController){
     NavHost(
@@ -26,6 +30,13 @@ fun BottomNavGraph(navController: NavController){
         }
         composable(route = "rooms"){
             RoomsScreen(navController)
+        }
+        composable(route = "room/{roomId}") { backStackEntry ->
+            val roomId = backStackEntry.arguments?.getString("roomId")
+            roomId?.let { id ->
+                // Pass the room ID to the RoomScreen
+                RoomScreen(roomId = id)
+            }
         }
         composable(route = "settings"){
             SettingsScreen(navController)

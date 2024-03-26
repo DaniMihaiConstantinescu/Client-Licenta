@@ -2,6 +2,7 @@ package com.example.testapp.utils.api
 
 import com.example.testapp.utils.api.apiServices.DeviceApiService
 import com.example.testapp.utils.api.apiServices.HubApiService
+import com.example.testapp.utils.api.apiServices.RoomApiService
 import com.example.testapp.utils.api.apiServices.SceneApiService
 import com.example.testapp.utils.api.apiServices.ScheduleApiService
 import retrofit2.Retrofit
@@ -25,6 +26,9 @@ object RetrofitClient {
     }
     val scheduleService: ScheduleApiService by lazy {
         retrofit.create(ScheduleApiService::class.java)
+    }
+    val roomService: RoomApiService by lazy {
+        retrofit.create(RoomApiService::class.java)
     }
     val deviceService: DeviceApiService by lazy {
         retrofit.create(DeviceApiService::class.java)

@@ -1,4 +1,4 @@
-package com.example.testapp.ui.homepage.home
+package com.example.testapp.ui.homepage.home.schedules
 
 import android.widget.Toast
 import androidx.compose.foundation.clickable
