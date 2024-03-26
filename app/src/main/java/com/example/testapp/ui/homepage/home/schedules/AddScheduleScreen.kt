@@ -1,8 +1,6 @@
 package com.example.testapp.ui.homepage.home.schedules
 
-import android.app.TimePickerDialog
 import android.os.Build
-import android.widget.TimePicker
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
@@ -29,15 +27,15 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TimePicker
+import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -54,15 +52,8 @@ import com.example.testapp.ui.homepage.home.common.RenderDeviceSettings
 import com.example.testapp.utils.dataClasses.general.Device
 import com.example.testapp.utils.dataClasses.general.GeneralDevice
 import com.example.testapp.utils.viewModels.homeScreen.Schedules.AddScheduleViewModel
-import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.time.LocalTime
-import java.time.format.DateTimeFormatter
-import java.util.Calendar
-import java.util.Locale
 
 @RequiresApi(Build.VERSION_CODES.O)
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddScheduleScreen(navController: NavController){
 
@@ -72,8 +63,8 @@ fun AddScheduleScreen(navController: NavController){
     val schedule = scheduleViewModel.schedule
     var scheduleName by rememberSaveable { mutableStateOf("") }
     var days by rememberSaveable { mutableStateOf(emptyList<Int>()) }
-    var from by rememberSaveable { mutableStateOf("00:00") }
-    var until by rememberSaveable { mutableStateOf("00:00") }
+    var from by rememberSaveable { mutableStateOf(mapOf("h" to 0, "m" to 0)) }
+    var until by rememberSaveable { mutableStateOf(mapOf("h" to 0, "m" to 0)) }
 
     var showAddDialog1 by remember { mutableStateOf(false) }
     var showAddDialog2 by remember { mutableStateOf(false) }
@@ -119,7 +110,12 @@ fun AddScheduleScreen(navController: NavController){
                 }
             }
         )
-        HoursPickers(from = from, until = until)
+        HoursPickers(
+            from = from,
+            until = until,
+            updateFrom = { time -> from = time },
+            updateUntil = { time -> until = time },
+        )
 
         AddButtonRow(onClick = { showAddDialog1 = true }, text = "Add Device")
         DeviceColumn01(schedule.devices, scheduleViewModel)
@@ -218,15 +214,28 @@ fun DaysRow(selectedDays: List<Int>, onDaySelected: (Int) -> Unit) {
 }
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun HoursPickers(from: String, until: String){
+fun HoursPickers(
+    from: Map<String, Int>,
+    until: Map<String, Int>,
+    updateFrom: (time: Map<String, Int>) -> Unit,
+    updateUntil: (time: Map<String, Int>) -> Unit
+){
 
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        TimePickerColumn(title = "From", onTimeSelected = {})
+        TimePickerColumn(
+            title = "From",
+            from,
+            updateTime = { h, m -> updateFrom(mapOf("h" to h, "m" to m)) }
+        )
 
-        TimePickerColumn(title = "Until", onTimeSelected = {})
+        TimePickerColumn(
+            title = "Until",
+            until,
+            updateTime = { h, m -> updateUntil(mapOf("h" to h, "m" to m)) }
+        )
     }
     Spacer(modifier = Modifier.height(16.dp))
 
@@ -234,14 +243,13 @@ fun HoursPickers(from: String, until: String){
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun TimePickerColumn(title: String, initialTime: String = LocalTime.now().toString(), onTimeSelected: (LocalTime) -> Unit) {
-    var selectedTime by remember { mutableStateOf(LocalTime.parse(initialTime)) }
-    var showTimePicker by remember { mutableStateOf(false) }
-    val state = ""
-    val formatter = remember { SimpleDateFormat("hh:mm a", Locale.getDefault()) }
-    val snackState = remember { SnackbarHostState() }
-    val snackScope = rememberCoroutineScope()
+fun TimePickerColumn(
+    title: String,
+    time: Map<String, Int>,
+    updateTime: (h: Int, m: Int) -> Unit
+) {
 
+    var showTimePicker by remember { mutableStateOf(false) }
 
     Column {
         Text(
@@ -253,36 +261,81 @@ fun TimePickerColumn(title: String, initialTime: String = LocalTime.now().toStri
             onClick = { showTimePicker = true },
             shape = RoundedCornerShape(12.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.secondary,
+                containerColor = MaterialTheme.colorScheme.surfaceVariant,
                 contentColor = Color.White
             )
         ) {
             Text(
-                text = selectedTime.format(DateTimeFormatter.ofPattern("HH:mm")),
+                text = "${time["h"]?.toString()?.padStart(2, '0')}:${time["m"]?.toString()?.padStart(2, '0')}",
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
             )
         }
+        
+        if (showTimePicker)
+            TimePickerDialog(
+                onCancel = { showTimePicker = false },
+                onConfirm = { h, m ->
+                    showTimePicker = false
+                    updateTime(h,m)
+                },
+                initialHour = time["h"] ?: 0,
+                initialMinute = time["m"] ?: 0
+            )
 
-//        if (showTimePicker) {
-//            TimePickerDialog(
-//                onCancel = { showTimePicker = false },
-//                onConfirm = {
-//                    val cal = Calendar.getInstance()
-//                    cal.set(Calendar.HOUR_OF_DAY, state.hour)
-//                    cal.set(Calendar.MINUTE, state.minute)
-//                    cal.isLenient = false
-//                    snackScope.launch {
-//                        snackState.showSnackbar("Entered time: ${formatter.format(cal.time)}")
-//                    }
-//                    showTimePicker = false
-//                },
-//            ) {
-//                TimePicker(state = state)
-//            }
-//        }
     }
 }
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TimePickerDialog(
+    initialHour: Int = 0,
+    initialMinute: Int = 0,
+    onCancel: () -> Unit,
+    onConfirm: (hour: Int, minute: Int) -> Unit
+) {
+    val timeState = rememberTimePickerState(
+        initialHour = initialHour,
+        initialMinute = initialMinute,
+        is24Hour = true
+    )
+
+    Dialog(
+        onDismissRequest = onCancel
+    ) {
+        Card(
+            shape = RoundedCornerShape(16.dp),
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(top = 28.dp, start = 20.dp, end = 20.dp, bottom = 12.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                TimePicker(state = timeState)
+                Row(
+                    modifier = Modifier
+                        .padding(top = 12.dp)
+                        .fillMaxWidth(), horizontalArrangement = Arrangement.End
+                ) {
+                    TextButton(onClick = onCancel ) {
+                        Text(text = "Dismiss")
+                    }
+                    TextButton(onClick = {
+                        onConfirm(timeState.hour, timeState.minute)
+                    }) {
+                        Text(text = "Confirm")
+                    }
+                }
+            }
+        }
+    }
+
+}
+
+
+
+
+
 
 
 @Composable
