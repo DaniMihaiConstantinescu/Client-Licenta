@@ -30,7 +30,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.testapp.ui.homepage.home.SceneCard
 import com.example.testapp.ui.homepage.home.common.AddButtonRow
-import com.example.testapp.utils.viewModels.homeScreen.Scenes.AllScenesViewModel
+import com.example.testapp.utils.viewModels.scenes.AllScenesViewModel
 
 @Composable
 fun AllScenesScreen(navController: NavController) {

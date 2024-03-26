@@ -46,8 +46,8 @@ import com.example.testapp.ui.homepage.home.common.DeviceWithSettingsCard
 import com.example.testapp.ui.homepage.home.common.RenderDeviceSettings
 import com.example.testapp.utils.dataClasses.general.Device
 import com.example.testapp.utils.dataClasses.general.GeneralDevice
-import com.example.testapp.utils.viewModels.homeScreen.Scenes.SceneAddDeviceViewModel
-import com.example.testapp.utils.viewModels.homeScreen.Scenes.SceneViewModel
+import com.example.testapp.utils.viewModels.scenes.SceneAddDeviceViewModel
+import com.example.testapp.utils.viewModels.scenes.SceneViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

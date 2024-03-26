@@ -23,8 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.testapp.utils.dataClasses.homeScreen.Scene
-import com.example.testapp.utils.viewModels.homeScreen.Scenes.SceneCardViewModel
-import kotlinx.coroutines.coroutineScope
+import com.example.testapp.utils.viewModels.scenes.SceneCardViewModel
 
 @Composable
 fun SceneCard(

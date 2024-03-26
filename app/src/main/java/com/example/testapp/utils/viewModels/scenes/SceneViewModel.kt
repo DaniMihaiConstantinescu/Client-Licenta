@@ -1,4 +1,4 @@
-package com.example.testapp.utils.viewModels.homeScreen.Scenes
+package com.example.testapp.utils.viewModels.scenes
 
 import android.util.Log
 import androidx.compose.runtime.getValue

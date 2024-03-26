@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.testapp.utils.dataClasses.homeScreen.Schedule
-import com.example.testapp.utils.viewModels.homeScreen.Scenes.SceneCardViewModel
 import com.example.testapp.utils.viewModels.homeScreen.Schedules.ScheduleCardViewModel
 
 @Composable

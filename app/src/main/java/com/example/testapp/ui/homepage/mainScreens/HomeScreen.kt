@@ -30,7 +30,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.testapp.ui.homepage.home.SceneCard
 import com.example.testapp.ui.homepage.home.ScheduleCard
-import com.example.testapp.utils.viewModels.homeScreen.Scenes.HomeSceneViewModel
+import com.example.testapp.utils.viewModels.scenes.HomeSceneViewModel
 import com.example.testapp.utils.viewModels.homeScreen.Schedules.HomeScheduleViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)

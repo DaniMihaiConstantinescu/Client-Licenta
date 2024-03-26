@@ -47,7 +47,7 @@ import com.example.testapp.ui.homepage.home.common.AddButtonRow
 import com.example.testapp.ui.homepage.home.common.RenderDeviceSettings
 import com.example.testapp.utils.dataClasses.general.Device
 import com.example.testapp.utils.dataClasses.general.GeneralDevice
-import com.example.testapp.utils.viewModels.homeScreen.Scenes.AddSceneViewModel
+import com.example.testapp.utils.viewModels.scenes.AddSceneViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

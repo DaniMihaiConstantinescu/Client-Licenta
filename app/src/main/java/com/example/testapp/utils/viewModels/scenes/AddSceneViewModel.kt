@@ -1,14 +1,11 @@
-package com.example.testapp.utils.viewModels.homeScreen.Scenes
+package com.example.testapp.utils.viewModels.scenes
 
-import android.content.Context
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavController
 import com.example.testapp.utils.api.RetrofitClient
 import com.example.testapp.utils.dataClasses.general.Device
 import com.example.testapp.utils.dataClasses.general.GeneralDevice
@@ -16,7 +13,6 @@ import com.example.testapp.utils.dataClasses.homeScreen.Scene
 import com.example.testapp.utils.dataClasses.homeScreen.SceneToCreate
 import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
-import retrofit2.HttpException
 import retrofit2.Response
 
 class AddSceneViewModel: ViewModel() {
