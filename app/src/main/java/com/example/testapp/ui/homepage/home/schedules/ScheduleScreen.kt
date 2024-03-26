@@ -18,8 +18,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -34,6 +35,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -46,10 +48,10 @@ import com.example.testapp.ui.homepage.home.common.DeviceWithSettingsCard
 import com.example.testapp.ui.homepage.home.common.RenderDeviceSettings
 import com.example.testapp.utils.dataClasses.general.Device
 import com.example.testapp.utils.dataClasses.general.GeneralDevice
+import com.example.testapp.utils.funcs.parseTime
 import com.example.testapp.utils.viewModels.homeScreen.Schedules.ScheduleAddDeviceViewModel
 import com.example.testapp.utils.viewModels.homeScreen.Schedules.ScheduleViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScheduleScreen(scheduleId: String){
 
@@ -99,6 +101,10 @@ fun ScheduleScreen(scheduleId: String){
             label = { Text("Schedule Name") },
             singleLine = true
         )
+
+        DaysRow(selectedDays = schedule.days)
+        HoursPickers(from = parseTime(schedule.from), until = parseTime(schedule.until))
+
         AddButtonRow(onClick = { showAddDialog1 = true }, text = "Add Device")
         DeviceColumn(schedule.devices, scheduleViewModel)
 
@@ -131,6 +137,89 @@ fun ScheduleScreen(scheduleId: String){
 
     }
 
+}
+
+@Composable
+fun DaysRow(selectedDays: List<Int>) {
+    Row(
+        modifier = Modifier.padding(bottom = 6.dp)
+    ) {
+        for (i in 0..6) {
+            val day = when (i) {
+                0 -> "S"
+                1 -> "M"
+                2 -> "T"
+                3 -> "W"
+                4 -> "T"
+                5 -> "F"
+                else -> "S"
+            }
+            val isSelected = selectedDays.contains(i)
+            Button(
+                onClick = {  },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent,
+                    contentColor = if (isSelected) Color.Black else Color.White
+                )
+            ) {
+                Text(text = day)
+            }
+        }
+    }
+}
+@Composable
+fun HoursPickers(
+    from: Map<String, Int>,
+    until: Map<String, Int>,
+){
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        TimePickerColumn(
+            title = "From",
+            from
+        )
+
+        TimePickerColumn(
+            title = "Until",
+            until
+        )
+    }
+    Spacer(modifier = Modifier.height(16.dp))
+
+}
+
+@Composable
+fun TimePickerColumn(
+    title: String,
+    time: Map<String, Int>,
+) {
+
+
+    Column {
+        Text(
+            text = title,
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+        Button(
+            onClick = {  },
+            shape = RoundedCornerShape(12.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                contentColor = Color.White
+            )
+        ) {
+            Text(
+                text = "${time["h"]?.toString()?.padStart(2, '0')}:${time["m"]?.toString()?.padStart(2, '0')}",
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+            )
+        }
+
+    }
 }
 
 @Composable

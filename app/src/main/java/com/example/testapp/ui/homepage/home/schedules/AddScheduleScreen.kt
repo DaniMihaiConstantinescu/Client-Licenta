@@ -100,6 +100,7 @@ fun AddScheduleScreen(navController: NavController){
             label = { Text("Schedule Name") },
             singleLine = true
         )
+
         DaysRow(
             selectedDays = days,
             onDaySelected = { selectedDay ->
