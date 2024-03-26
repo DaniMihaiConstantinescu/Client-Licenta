@@ -182,7 +182,7 @@ fun SchedulePart(navController: NavController) {
             }else {
                 items(scheduleViewModel.topSchedules) { schedule ->
                     ScheduleCard(schedule, navController)
-                    Spacer(modifier = Modifier.height(10.dp))
+                    Spacer(modifier = Modifier.height(12.dp))
                 }
             }
     }

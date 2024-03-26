@@ -188,7 +188,10 @@ fun AddScheduleScreen(navController: NavController){
 @Composable
 fun DaysRow(selectedDays: List<Int>, onDaySelected: (Int) -> Unit) {
     Row(
-        modifier = Modifier.padding(bottom = 6.dp)
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(6.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
         for (i in 0..6) {
             val day = when (i) {
@@ -201,15 +204,13 @@ fun DaysRow(selectedDays: List<Int>, onDaySelected: (Int) -> Unit) {
                 else -> "S"
             }
             val isSelected = selectedDays.contains(i)
-            Button(
-                onClick = { onDaySelected(i) },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent,
-                    contentColor = if (isSelected) Color.Black else Color.White
-                )
-            ) {
-                Text(text = day)
-            }
+
+            Text(
+                text = day,
+                Modifier
+                    .clickable { onDaySelected(i) },
+                color = if (isSelected) MaterialTheme.colorScheme.primary else Color.White,
+            )
         }
     }
 }

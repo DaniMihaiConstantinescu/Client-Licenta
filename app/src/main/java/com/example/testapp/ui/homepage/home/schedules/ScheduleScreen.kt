@@ -142,7 +142,10 @@ fun ScheduleScreen(scheduleId: String){
 @Composable
 fun DaysRow(selectedDays: List<Int>) {
     Row(
-        modifier = Modifier.padding(bottom = 6.dp)
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 6.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
         for (i in 0..6) {
             val day = when (i) {
@@ -155,15 +158,13 @@ fun DaysRow(selectedDays: List<Int>) {
                 else -> "S"
             }
             val isSelected = selectedDays.contains(i)
-            Button(
-                onClick = {  },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent,
-                    contentColor = if (isSelected) Color.Black else Color.White
-                )
-            ) {
-                Text(text = day)
-            }
+
+            Text(
+                text = day,
+                Modifier
+                    .clickable {  },
+                color = if (isSelected) MaterialTheme.colorScheme.primary else Color.White,
+            )
         }
     }
 }
