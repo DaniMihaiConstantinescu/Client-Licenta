@@ -89,6 +89,11 @@ dependencies {
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
+    // firebase + coil-compose(remove pictures)
+    implementation("com.google.firebase:firebase-auth-ktx:22.3.1")
+    implementation("com.google.android.gms:play-services-auth:21.0.0")
+    implementation("io.coil-kt:coil-compose:2.6.0")
+
 
     implementation("io.github.raamcosta.compose-destinations:core:1.1.2-beta")
     ksp("io.github.raamcosta.compose-destinations:ksp:1.1.2-beta")
