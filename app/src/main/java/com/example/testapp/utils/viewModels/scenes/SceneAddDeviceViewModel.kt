@@ -23,7 +23,7 @@ class SceneAddDeviceViewModel(
         viewModelScope.launch {
             try {
                 isLoading = true
-                val response = RetrofitClient.deviceService.getDevicesNotInList(devicesInScene)
+                val response = RetrofitClient.hubService.getAllDevicesNotIn("1" ,devicesInScene)
                 // verify if it has scenes
                 isLoading = false
                 devices = response.devices ?: emptyList<GeneralDevice>()

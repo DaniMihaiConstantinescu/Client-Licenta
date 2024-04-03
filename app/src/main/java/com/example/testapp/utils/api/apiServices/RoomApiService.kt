@@ -3,6 +3,7 @@ package com.example.testapp.utils.api.apiServices
 import com.example.testapp.utils.api.AllRoomsResponse
 import com.example.testapp.utils.api.RoomResponse
 import com.example.testapp.utils.dataClasses.general.Device
+import com.example.testapp.utils.dataClasses.general.GeneralDevice
 import com.example.testapp.utils.dataClasses.roomsScreen.RoomToCreate
 import retrofit2.Response
 import retrofit2.http.Body
@@ -35,7 +36,7 @@ interface RoomApiService {
     suspend fun addDeviceToRoom(
         @Path("userId") userId: String,
         @Path("roomId") roomId: String,
-        @Body newDevice: Device
+        @Body newDevice: GeneralDevice
     ): Response<Void>
     @DELETE("/$mainResource/remove-device/{userId}/{roomId}/{macAddress}")
     suspend fun deleteDeviceFromRoom(

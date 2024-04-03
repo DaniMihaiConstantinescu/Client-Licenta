@@ -13,6 +13,8 @@ private const val mainResource ="devices"
 interface DeviceApiService {
     @POST("/$mainResource/not-in")
     suspend fun getDevicesNotInList(@Body devices: List<String>): DevicesResponse
+    @POST("/$mainResource/in-list")
+    suspend fun getDevicesInList(@Body devices: List<String>): DevicesResponse
     @GET("/$mainResource/{userId}/{deviceId}")
     suspend fun getDevice(@Path("userId") userId: String, @Path("deviceId") deviceId: String): DeviceResponse
 }

@@ -22,7 +22,7 @@ fun RoomCard(
 
     Card(
         modifier = Modifier
-            .clickable { navController.navigate("room/${room.roomName}") }
+            .clickable { navController.navigate("room/${room.roomId}") }
             .fillMaxWidth()
     ) {
         Column(

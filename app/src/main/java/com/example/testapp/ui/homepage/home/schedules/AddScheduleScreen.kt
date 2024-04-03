@@ -190,7 +190,7 @@ fun DaysRow(selectedDays: List<Int>, onDaySelected: (Int) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(6.dp),
+            .padding(bottom = 16.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         for (i in 0..6) {

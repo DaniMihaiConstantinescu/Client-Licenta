@@ -23,7 +23,7 @@ class ScheduleAddDeviceViewModel(
         viewModelScope.launch {
             try {
                 isLoading = true
-                val response = RetrofitClient.deviceService.getDevicesNotInList(devicesInSchedule)
+                val response = RetrofitClient.hubService.getAllDevicesNotIn("1", devicesInSchedule)
                 // verify if it has schedules
                 isLoading = false
                 devices = response.devices ?: emptyList<GeneralDevice>()
