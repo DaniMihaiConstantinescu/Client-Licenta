@@ -58,47 +58,54 @@ fun HomeScreen(
                 .background(MaterialTheme.colorScheme.background)
                 .padding(horizontal = 20.dp),
 
+        ) {
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 46.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
             ) {
-            LazyColumn() {
-                item {
-
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 26.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        if ( userData?.userName != null ){
-                            Text(
-                                text = "Welcome, " + userData.userName,
-                                fontWeight = FontWeight.SemiBold,
-                                fontSize = 16.sp
-                            )
-                        }
-                        if ( userData?.profilePicURL != null ) {
-                            AsyncImage(
-                                model = userData.profilePicURL,
-                                contentDescription = "Profile Picture",
-                                modifier = Modifier
-                                    .clip(CircleShape),
-                                contentScale = ContentScale.Crop
-                            )
-                        }
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(end = 8.dp)
+                ) {
+                    if (userData?.userName != null) {
+                        Text(
+                            text = "Welcome, " + userData.userName,
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 26.sp,
+                            modifier = Modifier.fillMaxWidth(),
+                            lineHeight = 2.sp
+                        )
                     }
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Button(onClick = onSignOut) {
-                        Text(text = "Sign out")
-                    }
-                    Spacer(modifier = Modifier.height(16.dp))
-
                 }
-                item { ScenePart(navController) }
-                item { SchedulePart(navController) }
+                if (userData?.profilePicURL != null) {
+                    AsyncImage(
+                        model = userData.profilePicURL,
+                        contentDescription = "Profile Picture",
+                        modifier = Modifier
+                            .size(48.dp) // Adjust the size of the image as needed
+                            .clip(CircleShape),
+                        contentScale = ContentScale.Crop
+                    )
+                }
             }
+
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(onClick = onSignOut) {
+                Text(text = "Sign out")
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+
+            ScenePart(navController)
+            SchedulePart(navController)
         }
+
     }
 
 }
