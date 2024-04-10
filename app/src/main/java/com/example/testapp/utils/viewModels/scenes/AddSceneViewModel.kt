@@ -11,6 +11,8 @@ import com.example.testapp.utils.dataClasses.general.Device
 import com.example.testapp.utils.dataClasses.general.GeneralDevice
 import com.example.testapp.utils.dataClasses.homeScreen.Scene
 import com.example.testapp.utils.dataClasses.homeScreen.SceneToCreate
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
 import retrofit2.Response
@@ -26,6 +28,15 @@ class AddSceneViewModel: ViewModel() {
     var responseCode by mutableStateOf<Response<Void>?>(null)
         private set
 
+    val auth = Firebase.auth
+    private var userId by mutableStateOf("")
+    
+    init {
+        auth.currentUser?.run {
+            userId = uid
+        }
+    }
+
     fun getAllDevicesFromHub(){
         viewModelScope.launch {
             devicesToAdd = getAllDevicesFromHubAsync()
@@ -35,7 +46,7 @@ class AddSceneViewModel: ViewModel() {
     suspend fun getAllDevicesFromHubAsync(): List<GeneralDevice> {
         return try {
             isLoading = true
-            val response = RetrofitClient.hubService.getAllDevices("1")
+            val response = RetrofitClient.hubService.getAllDevices(userId)
             // verify if it has scenes
             isLoading = false
             response.devices
@@ -58,7 +69,7 @@ class AddSceneViewModel: ViewModel() {
         viewModelScope.launch {
             try {
                 val response = RetrofitClient.sceneService.createScene(
-                    "1",
+                    userId,
                     SceneToCreate(
                         scene.devices,
                         scene.isActive,

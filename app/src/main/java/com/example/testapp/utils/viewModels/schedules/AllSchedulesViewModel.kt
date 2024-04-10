@@ -8,6 +8,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.testapp.utils.api.RetrofitClient
 import com.example.testapp.utils.dataClasses.homeScreen.Schedule
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
@@ -18,11 +20,18 @@ class AllSchedulesViewModel: ViewModel() {
     var isLoading by mutableStateOf(false)
         private set
 
+    val auth = Firebase.auth
+    private var userId by mutableStateOf("")
+    
     init {
+        auth.currentUser?.run {
+            userId = uid
+        }
+        
         viewModelScope.launch {
             try {
                 isLoading = true
-                val response = RetrofitClient.scheduleService.getAllSchedules("1")
+                val response = RetrofitClient.scheduleService.getAllSchedules(userId)
                 // verify if it has schedules
                 val schedules = response.schedules
                 isLoading = false
@@ -38,7 +47,7 @@ class AllSchedulesViewModel: ViewModel() {
     fun deleteSchedule(scheduleId: String) {
         viewModelScope.launch {
             try {
-                val response = RetrofitClient.scheduleService.deleteSchedule("1", scheduleId)
+                val response = RetrofitClient.scheduleService.deleteSchedule(userId, scheduleId)
                 if (response.isSuccessful) {
                     allSchedules = allSchedules.filter { it.scheduleId != scheduleId }
                 } else {

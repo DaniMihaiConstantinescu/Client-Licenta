@@ -8,6 +8,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.testapp.utils.api.RetrofitClient
 import com.example.testapp.utils.dataClasses.homeScreen.Scene
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
@@ -18,11 +20,18 @@ class AllScenesViewModel: ViewModel() {
     var isLoading by mutableStateOf(false)
         private set
 
+    val auth = Firebase.auth
+    private var userId by mutableStateOf("")
+
     init {
+        auth.currentUser?.run {
+            userId = uid
+        }
+        
         viewModelScope.launch {
             try {
                 isLoading = true
-                val response = RetrofitClient.sceneService.getAllScenes("1")
+                val response = RetrofitClient.sceneService.getAllScenes(userId)
                 // verify if it has scenes
                 val scenes = response.scenes
                 isLoading = false
@@ -38,7 +47,7 @@ class AllScenesViewModel: ViewModel() {
     fun deleteScene(sceneId: String) {
         viewModelScope.launch {
             try {
-                val response = RetrofitClient.sceneService.deleteScene("1", sceneId)
+                val response = RetrofitClient.sceneService.deleteScene(userId, sceneId)
                 if (response.isSuccessful) {
                     allScenes = allScenes.filter { it.sceneId != sceneId }
                 } else {

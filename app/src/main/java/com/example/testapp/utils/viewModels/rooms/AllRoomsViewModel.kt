@@ -9,6 +9,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.testapp.utils.api.RetrofitClient
 import com.example.testapp.utils.dataClasses.roomsScreen.Room
 import com.example.testapp.utils.dataClasses.roomsScreen.RoomToCreate
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
 import retrofit2.HttpException
@@ -21,11 +23,18 @@ class AllRoomsViewModel: ViewModel() {
     var isLoading by mutableStateOf(false)
         private set
 
+    val auth = Firebase.auth
+    private var userId by mutableStateOf("")
+
     init {
+        auth.currentUser?.run {
+            userId = uid
+        }
+
         viewModelScope.launch {
             try {
                 isLoading = true
-                val response = RetrofitClient.roomService.getAllRooms("1")
+                val response = RetrofitClient.roomService.getAllRooms(userId)
                 // verify if it has rooms
                 val rooms = response.rooms
                 isLoading = false
@@ -42,7 +51,7 @@ class AllRoomsViewModel: ViewModel() {
         viewModelScope.launch {
             try {
                 val response = RetrofitClient.roomService.createRoom(
-                    "1",
+                    userId,
                     RoomToCreate(
                         roomName = roomName,
                         devices = emptyList()
@@ -60,7 +69,7 @@ class AllRoomsViewModel: ViewModel() {
     fun refreshRooms(){
         viewModelScope.launch {
             try {
-                val response = RetrofitClient.roomService.getAllRooms("1")
+                val response = RetrofitClient.roomService.getAllRooms(userId)
                 // verify if it has rooms
                 val rooms = response.rooms
                 allRooms = rooms ?: emptyList()
@@ -74,7 +83,7 @@ class AllRoomsViewModel: ViewModel() {
     fun deleteRoom(roomId: String) {
         viewModelScope.launch {
             try {
-                val response = RetrofitClient.roomService.deleteRoom("1", roomId)
+                val response = RetrofitClient.roomService.deleteRoom(userId, roomId)
                 if (response.isSuccessful) {
                     allRooms = allRooms.filter { it.roomId != roomId }
                 } else {

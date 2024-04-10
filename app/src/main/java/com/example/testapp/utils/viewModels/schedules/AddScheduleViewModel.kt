@@ -11,6 +11,8 @@ import com.example.testapp.utils.dataClasses.general.Device
 import com.example.testapp.utils.dataClasses.general.GeneralDevice
 import com.example.testapp.utils.dataClasses.homeScreen.Schedule
 import com.example.testapp.utils.dataClasses.homeScreen.ScheduleToCreate
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
 import retrofit2.Response
@@ -34,6 +36,15 @@ class AddScheduleViewModel: ViewModel() {
     var responseCode by mutableStateOf<Response<Void>?>(null)
         private set
 
+    val auth = Firebase.auth
+    private var userId by mutableStateOf("")
+
+    init {
+        auth.currentUser?.run {
+            userId = uid
+        }
+    }
+
     fun getAllDevicesFromHub(){
         viewModelScope.launch {
             devicesToAdd = getAllDevicesFromHubAsync()
@@ -43,7 +54,7 @@ class AddScheduleViewModel: ViewModel() {
     suspend fun getAllDevicesFromHubAsync(): List<GeneralDevice> {
         return try {
             isLoading = true
-            val response = RetrofitClient.hubService.getAllDevices("1")
+            val response = RetrofitClient.hubService.getAllDevices(userId)
             // verify if it has schedules
             isLoading = false
             response.devices
@@ -72,7 +83,7 @@ class AddScheduleViewModel: ViewModel() {
         viewModelScope.launch {
             try {
                 val response = RetrofitClient.scheduleService.createSchedule(
-                    "1",
+                    userId,
                     ScheduleToCreate(
                         schedule.devices,
                         schedule.isActive,
