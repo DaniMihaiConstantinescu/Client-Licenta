@@ -110,15 +110,7 @@ class MainActivity : ComponentActivity() {
                             composable(route = "home") {
                                 HomeScreen(
                                     navController,
-                                    userData = googleAuthUiClient.getSignedInUser(),
-                                    onSignOut = {
-                                        lifecycleScope.launch {
-                                            googleAuthUiClient.signOut()
-                                            Toast.makeText(applicationContext, "Signed Out", Toast.LENGTH_SHORT).show()
-
-                                            navController.navigate("sign_in")
-                                        }
-                                    }
+                                    userData = googleAuthUiClient.getSignedInUser()
                                 )
                             }
                             composable(route = "rooms") {
@@ -132,7 +124,17 @@ class MainActivity : ComponentActivity() {
                                 }
                             }
                             composable(route = "settings") {
-                                SettingsScreen(navController)
+                                SettingsScreen(
+                                    navController,
+                                    onSignOut = {
+                                        lifecycleScope.launch {
+                                            googleAuthUiClient.signOut()
+                                            Toast.makeText(applicationContext, "Signed Out", Toast.LENGTH_SHORT).show()
+
+                                            navController.navigate("sign_in")
+                                        }
+                                    }
+                                )
                             }
                             composable(route = "allScenes") {
                                 AllScenesScreen(navController)

@@ -44,8 +44,7 @@ import com.example.testapp.utils.viewModels.homeScreen.Schedules.HomeScheduleVie
 @Composable
 fun HomeScreen(
     navController: NavController,
-    userData: UserData?,
-    onSignOut: () -> Unit
+    userData: UserData?
 ) {
     Scaffold(
         bottomBar = {
@@ -78,7 +77,7 @@ fun HomeScreen(
                             fontWeight = FontWeight.SemiBold,
                             fontSize = 26.sp,
                             modifier = Modifier.fillMaxWidth(),
-                            lineHeight = 2.sp
+                            lineHeight = 26.sp
                         )
                     }
                 }
@@ -92,13 +91,6 @@ fun HomeScreen(
                         contentScale = ContentScale.Crop
                     )
                 }
-            }
-
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Button(onClick = onSignOut) {
-                Text(text = "Sign out")
             }
             Spacer(modifier = Modifier.height(16.dp))
 
