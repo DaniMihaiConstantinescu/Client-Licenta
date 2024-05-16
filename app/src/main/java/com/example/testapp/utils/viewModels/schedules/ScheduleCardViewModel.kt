@@ -7,6 +7,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.testapp.utils.api.RetrofitClient
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
@@ -15,10 +17,19 @@ class ScheduleCardViewModel: ViewModel() {
     var toggledSuccesfully by mutableStateOf(false)
         private set
 
+    val auth = Firebase.auth
+    private var userId by mutableStateOf("")
+    
+    init {
+        auth.currentUser?.run {
+            userId = uid
+        }
+    }
+
     fun toggleSchedule(scheduleId: String, callback: (Boolean) -> Unit) {
         viewModelScope.launch {
             try {
-                val response = RetrofitClient.scheduleService.toggleSchedule("1", scheduleId)
+                val response = RetrofitClient.scheduleService.toggleSchedule(userId, scheduleId)
                 toggledSuccesfully = response.isSuccessful
                 callback(toggledSuccesfully)
             } catch (e: HttpException) {

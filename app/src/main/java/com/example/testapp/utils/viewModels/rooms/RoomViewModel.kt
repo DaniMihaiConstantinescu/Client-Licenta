@@ -9,6 +9,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.testapp.utils.api.RetrofitClient
 import com.example.testapp.utils.dataClasses.general.GeneralDevice
 import com.example.testapp.utils.dataClasses.roomsScreen.Room
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
@@ -22,12 +24,19 @@ class RoomViewModel(
     var isLoading by mutableStateOf(false)
         private set
 
+    val auth = Firebase.auth
+    private var userId by mutableStateOf("")
+
 
     init {
+        auth.currentUser?.run {
+            userId = uid
+        }
+        
         viewModelScope.launch {
             try {
                 isLoading = true
-                val response = RetrofitClient.roomService.getRoom("1", roomId)
+                val response = RetrofitClient.roomService.getRoom(userId, roomId)
                 // verify if it has rooms
                 isLoading = false
                 room = response.room ?: Room(devices = emptyList(), roomName = "", roomId)
@@ -37,19 +46,16 @@ class RoomViewModel(
                 isLoading = false
             }
 
-            viewModelScope.launch {
-                try {
-                    isLoading = true
-                    val response = RetrofitClient.deviceService.getDevicesInList(room.devices)
-                    isLoading = false
-                    devices = response.devices ?: emptyList<GeneralDevice>()
-                } catch (e: Exception) {
-                    // Handle network errors
-                    Log.e("API Request", "Error: ${e.message}", e)
-                    isLoading = false
-                }
+            try {
+                isLoading = true
+                val response = RetrofitClient.deviceService.getDevicesInList(room.devices)
+                isLoading = false
+                devices = response.devices ?: emptyList<GeneralDevice>()
+            } catch (e: Exception) {
+                // Handle network errors
+                Log.e("API Request", "Error: ${e.message}", e)
+                isLoading = false
             }
-
         }
     }
 
@@ -57,7 +63,7 @@ class RoomViewModel(
         viewModelScope.launch {
             try {
                 isLoading = true
-                val response = RetrofitClient.hubService.getAllDevicesNotIn("1", room.devices)
+                val response = RetrofitClient.hubService.getAllDevicesNotIn(userId, room.devices)
                 isLoading = false
                 val devicesList = response.devices ?: emptyList()
                 callback(devicesList)
@@ -92,7 +98,7 @@ class RoomViewModel(
         viewModelScope.launch {
             try {
                 // Make the API call to add the device to the room
-                val response = RetrofitClient.roomService.addDeviceToRoom("1", roomId, newDevice)
+                val response = RetrofitClient.roomService.addDeviceToRoom(userId, roomId, newDevice)
                 if (response.isSuccessful) {
                     val updatedRoom = room.copy(devices = room.devices + newDevice.deviceMAC)
                     room = updatedRoom
@@ -113,7 +119,7 @@ class RoomViewModel(
     fun deleteDevice(deviceId: String) {
         viewModelScope.launch {
             try {
-                val response = RetrofitClient.roomService.deleteDeviceFromRoom("1", roomId, deviceId)
+                val response = RetrofitClient.roomService.deleteDeviceFromRoom(userId, roomId, deviceId)
                 if (response.isSuccessful) {
                     // Remove the device from the list
                     val updatedDevices = room.devices.filter { it != deviceId }

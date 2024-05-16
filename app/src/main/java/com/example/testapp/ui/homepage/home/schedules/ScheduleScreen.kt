@@ -329,7 +329,18 @@ fun AddDialogPage1(
                             .fillMaxWidth()
                             .padding(horizontal = 10.dp)
                     ){
-                        items(devicesNotIn.devices){device ->
+                        if (devicesNotIn.devices.isEmpty()){
+                            item {
+                                Text(
+                                    modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
+                                    textAlign = TextAlign.Center,
+                                    color = Color.White,
+                                    fontSize = MaterialTheme.typography.titleLarge.fontSize,
+                                    text = "There is no device to add"
+                                )
+                            }
+                        }
+                        else items(devicesNotIn.devices){device ->
                             Card(
                                 modifier = Modifier
                                     .clickable { onConfirmation(device) }

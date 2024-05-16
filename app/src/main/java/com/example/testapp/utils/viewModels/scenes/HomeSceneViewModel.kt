@@ -8,6 +8,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.testapp.utils.api.RetrofitClient
 import com.example.testapp.utils.dataClasses.homeScreen.Scene
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import kotlinx.coroutines.launch
 
 class HomeSceneViewModel: ViewModel(){
@@ -17,11 +19,18 @@ class HomeSceneViewModel: ViewModel(){
     var isLoading by mutableStateOf(false)
         private set
 
+    val auth = Firebase.auth
+    private var userId by mutableStateOf("")
+    
     init {
+        auth.currentUser?.run {
+            userId = uid
+        }
+        
         viewModelScope.launch {
             try {
                 isLoading = true
-                val response = RetrofitClient.sceneService.getTopScenes("1")
+                val response = RetrofitClient.sceneService.getTopScenes(userId)
                 // verify if it has scenes
                 val scenes = response.scenes
                 isLoading = false

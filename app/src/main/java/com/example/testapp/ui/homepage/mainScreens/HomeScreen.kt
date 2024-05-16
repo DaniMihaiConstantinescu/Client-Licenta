@@ -14,9 +14,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -24,19 +25,27 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.example.testapp.ui.homepage.home.scenes.SceneCard
 import com.example.testapp.ui.homepage.home.schedules.ScheduleCard
+import com.example.testapp.utils.auth.logic.UserData
 import com.example.testapp.utils.viewModels.scenes.HomeSceneViewModel
 import com.example.testapp.utils.viewModels.homeScreen.Schedules.HomeScheduleViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun HomeScreen(navController: NavController) {
+fun HomeScreen(
+    navController: NavController,
+    userData: UserData?
+) {
     Scaffold(
         bottomBar = {
             BottomNavigationBar(navController = navController)
@@ -48,12 +57,47 @@ fun HomeScreen(navController: NavController) {
                 .background(MaterialTheme.colorScheme.background)
                 .padding(horizontal = 20.dp),
 
+        ) {
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 46.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
             ) {
-            Column {
-                ScenePart(navController)
-                SchedulePart(navController)
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(end = 8.dp)
+                ) {
+                    if (userData?.userName != null) {
+                        Text(
+                            text = "Welcome, " + userData.userName,
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 26.sp,
+                            modifier = Modifier.fillMaxWidth(),
+                            lineHeight = 26.sp
+                        )
+                    }
+                }
+                if (userData?.profilePicURL != null) {
+                    AsyncImage(
+                        model = userData.profilePicURL,
+                        contentDescription = "Profile Picture",
+                        modifier = Modifier
+                            .size(48.dp) // Adjust the size of the image as needed
+                            .clip(CircleShape),
+                        contentScale = ContentScale.Crop
+                    )
+                }
             }
+            Spacer(modifier = Modifier.height(16.dp))
+
+            ScenePart(navController)
+            SchedulePart(navController)
         }
+
     }
 
 }

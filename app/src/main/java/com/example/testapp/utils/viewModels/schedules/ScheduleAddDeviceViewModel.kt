@@ -8,6 +8,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.testapp.utils.api.RetrofitClient
 import com.example.testapp.utils.dataClasses.general.GeneralDevice
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import kotlinx.coroutines.launch
 
 class ScheduleAddDeviceViewModel(
@@ -19,11 +21,18 @@ class ScheduleAddDeviceViewModel(
     var isLoading by mutableStateOf(false)
         private set
 
+    val auth = Firebase.auth
+    private var userId by mutableStateOf("")
+    
     init {
+        auth.currentUser?.run {
+            userId = uid
+        }
+        
         viewModelScope.launch {
             try {
                 isLoading = true
-                val response = RetrofitClient.hubService.getAllDevicesNotIn("1", devicesInSchedule)
+                val response = RetrofitClient.hubService.getAllDevicesNotIn(userId, devicesInSchedule)
                 // verify if it has schedules
                 isLoading = false
                 devices = response.devices ?: emptyList<GeneralDevice>()
