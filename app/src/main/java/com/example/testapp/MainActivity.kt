@@ -25,6 +25,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.testapp.ui.auth.SignInScreen
+import com.example.testapp.ui.homepage.home.hubs.AllHubsScreen
 import com.example.testapp.ui.homepage.home.rooms.RoomScreen
 import com.example.testapp.ui.homepage.home.scenes.AddSceneScreen
 import com.example.testapp.ui.homepage.home.scenes.AllScenesScreen
@@ -135,6 +136,9 @@ class MainActivity : ComponentActivity() {
                                         }
                                     }
                                 )
+                            }
+                            composable(route = "allHubs"){
+                                AllHubsScreen()
                             }
                             composable(route = "allScenes") {
                                 AllScenesScreen(navController)

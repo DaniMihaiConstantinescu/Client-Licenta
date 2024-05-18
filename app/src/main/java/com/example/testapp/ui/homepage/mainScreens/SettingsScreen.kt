@@ -2,19 +2,17 @@ package com.example.testapp.ui.homepage.mainScreens
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -33,7 +31,7 @@ fun SettingsScreen(
     val auth = Firebase.auth
     var txt = ""
     auth.currentUser?.run {
-        txt = uid
+        txt = email.toString()
     }
 
     Scaffold(
@@ -50,8 +48,8 @@ fun SettingsScreen(
                 modifier = Modifier.padding(top = 24.dp)
             ) {
                 Text(
-                    text = "Account Key" ,
-                    fontSize = MaterialTheme.typography.headlineMedium.fontSize,
+                    text = "Account Email" ,
+                    fontSize = MaterialTheme.typography.titleLarge.fontSize,
                     fontWeight = FontWeight.Bold,
                     color = Color.White
                 )
@@ -62,19 +60,22 @@ fun SettingsScreen(
                     color = Color.White
                 )
             }
-            
-            Card {
-                Text(text = "View all hubs")
+            Spacer(modifier = Modifier.height(12.dp))
+            Button(
+                onClick = { navController.navigate("allHubs") },
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
+            ) {
+                Text(text = "View all hubs  >", color = Color.White)
+            }
+            Spacer(modifier = Modifier.height(32.dp))
+            Button(
+                onClick = onSignOut,
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Text(text = "Sign out")
             }
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Button(onClick = onSignOut) {
-                    Text(text = "Sign out")
-                }
-            }
         }
     }
 }
