@@ -18,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -31,7 +32,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -40,7 +40,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.testapp.ui.homepage.home.common.AddButtonRow
 import com.example.testapp.utils.dataClasses.general.GeneralDevice
-import com.example.testapp.utils.enums.IconsIds
+import com.example.testapp.utils.funcs.RenderDeviceIcon
 import com.example.testapp.utils.viewModels.rooms.RoomViewModel
 
 @Composable
@@ -151,7 +151,6 @@ fun DeviceColumn(
                         Card(
                             modifier = Modifier
                                 .clickable { }
-                                .fillMaxWidth()
                         ) {
                             Row(
                                 modifier = Modifier
@@ -171,30 +170,6 @@ fun DeviceColumn(
     }
 
 }
-@Composable
-fun RenderDeviceIcon(deviceType: String){
-
-    when (deviceType){
-        "ac" -> Icon(
-            painter = painterResource(IconsIds.AC.drawableResId),
-            contentDescription = IconsIds.AC.iconName
-        )
-        "dehumifier" -> Icon(
-            painter = painterResource(IconsIds.DEHUIDIFIER.drawableResId),
-            contentDescription = IconsIds.DEHUIDIFIER.iconName
-        )
-        "light" -> Icon(
-            painter = painterResource(IconsIds.LIGHT.drawableResId),
-            contentDescription = IconsIds.DEHUIDIFIER.iconName
-        )
-        "shutter" -> Icon(
-            painter = painterResource(IconsIds.SHUTTER.drawableResId),
-            contentDescription = IconsIds.SHUTTER.iconName
-        )
-    }
-
-}
-
 
 @Composable
 fun AddDialogPage01(
@@ -240,7 +215,9 @@ fun AddDialogPage01(
                         if (devicesToAdd.isEmpty()){
                             item {
                                 Text(
-                                    modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(top = 16.dp),
                                     textAlign = TextAlign.Center,
                                     color = Color.White,
                                     fontSize = MaterialTheme.typography.titleLarge.fontSize,
@@ -252,16 +229,21 @@ fun AddDialogPage01(
                             Card(
                                 modifier = Modifier
                                     .clickable { onConfirmation(device) }
-                                    .padding(bottom = 8.dp)
+                                    .padding(bottom = 8.dp),
+                                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
                             ) {
-                                Text(
-                                    text = device.name,
-                                    modifier = Modifier
-                                        .background(MaterialTheme.colorScheme.surface)
-                                        .fillMaxWidth()
+                                Row(
+                                    Modifier.fillMaxWidth()
                                         .padding(10.dp),
-                                    textAlign = TextAlign.Center
-                                )
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Text(
+                                        text = device.name,
+                                        textAlign = TextAlign.Center
+                                    )
+                                    RenderDeviceIcon(deviceType = device.type)
+                                }
                             }
                         }
                     }

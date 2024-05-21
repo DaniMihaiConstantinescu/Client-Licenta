@@ -1,8 +1,11 @@
 package com.example.testapp.ui.homepage.home.common
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material3.MaterialTheme
@@ -22,6 +25,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.testapp.utils.dataClasses.general.GeneralDevice
+import com.example.testapp.utils.funcs.RenderDeviceIcon
 import java.util.Locale
 
 
@@ -41,17 +45,20 @@ fun RenderDeviceSettings(
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
-        Text(
-            text = device.name.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() },
-            style = MaterialTheme.typography.headlineMedium,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth()
-        )
-        Text(
-            text = "Type: " + device.type.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() },
-            textAlign = TextAlign.Center,
-            modifier = Modifier.padding(top = 8.dp, bottom = 8.dp)
-        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = device.name.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() },
+                style = MaterialTheme.typography.headlineMedium,
+                textAlign = TextAlign.Center
+            )
+            RenderDeviceIcon(deviceType = device.type)
+        }
+        Spacer(modifier = Modifier.height(20.dp))
         SettingsRederer(device = device, updateSettings)
     }
 }

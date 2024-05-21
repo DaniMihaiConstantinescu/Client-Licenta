@@ -19,7 +19,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -31,13 +30,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.testapp.utils.dataClasses.general.GeneralDevice
 import com.example.testapp.utils.dataClasses.hubScreen.Hub
-import com.example.testapp.utils.enums.IconsIds
+import com.example.testapp.utils.funcs.RenderDeviceIcon
 import com.example.testapp.utils.viewModels.hubs.AllHubsViewModel
 import com.example.testapp.utils.viewModels.hubs.HubDevicesViewModel
 
@@ -194,29 +192,4 @@ fun DevicesDialog(
         },
         containerColor = MaterialTheme.colorScheme.primaryContainer
     )
-}
-
-
-@Composable
-fun RenderDeviceIcon(deviceType: String){
-
-    when (deviceType){
-        "ac" -> Icon(
-            painter = painterResource(IconsIds.AC.drawableResId),
-            contentDescription = IconsIds.AC.iconName
-        )
-        "dehumifier" -> Icon(
-            painter = painterResource(IconsIds.DEHUIDIFIER.drawableResId),
-            contentDescription = IconsIds.DEHUIDIFIER.iconName
-        )
-        "light" -> Icon(
-            painter = painterResource(IconsIds.LIGHT.drawableResId),
-            contentDescription = IconsIds.DEHUIDIFIER.iconName
-        )
-        "shutter" -> Icon(
-            painter = painterResource(IconsIds.SHUTTER.drawableResId),
-            contentDescription = IconsIds.SHUTTER.iconName
-        )
-    }
-
 }
