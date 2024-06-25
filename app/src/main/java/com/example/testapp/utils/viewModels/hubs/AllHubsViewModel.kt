@@ -23,15 +23,14 @@ class AllHubsViewModel: ViewModel() {
     private var userId by mutableStateOf("")
 
     init {
-//        auth.currentUser?.run {
-//            userId = uid
-//        }
+        auth.currentUser?.run {
+            userId = uid
+        }
 
         viewModelScope.launch {
             try {
                 isLoading = true
-//                val response = RetrofitClient.sceneService.getAllScenes(userId)
-                val response = RetrofitClient.hubService.getAllHubs("1")
+                val response = RetrofitClient.hubService.getAllHubs(userId)
                 // verify if it has scenes
                 val hubs = response.hubs
                 isLoading = false
