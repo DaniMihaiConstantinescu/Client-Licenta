@@ -19,7 +19,10 @@ interface RoomApiService {
 
 
     @GET("/$mainResource/{userId}/{roomId}")
-    suspend fun getRoom(@Path("userId") userId: String, @Path("roomId") roomId: String): RoomResponse
+    suspend fun getRoom(
+        @Path("userId") userId: String,
+        @Path("roomId") roomId: String
+    ): RoomResponse
     @POST("/$mainResource/{userId}")
     suspend fun createRoom(
         @Path("userId") userId: String,
