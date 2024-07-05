@@ -152,7 +152,7 @@ fun SettingsRederer(
                             onClick =
                             {
                                 selectedButton = "ON"
-                                updateSettings(mapOf("state" to "on"))
+                                updateSettings(mapOf("light" to "on"))
                             },
                             modifier = Modifier.semantics { contentDescription = "ON" }
                         )
@@ -168,7 +168,7 @@ fun SettingsRederer(
                             onClick =
                             {
                                 selectedButton = "OFF"
-                                updateSettings(mapOf("state" to "off"))
+                                updateSettings(mapOf("light" to "off"))
                             },
                             modifier = Modifier.semantics { contentDescription = "OFF" }
                         )
@@ -194,7 +194,7 @@ fun SettingsRederer(
                             onClick =
                             {
                                 selectedButton = "UP"
-                                updateSettings(mapOf("state" to "up"))
+                                updateSettings(mapOf("shutter" to "up"))
                             },
                             modifier = Modifier.semantics { contentDescription = "UP" }
                         )
@@ -210,7 +210,7 @@ fun SettingsRederer(
                             onClick =
                             {
                                 selectedButton = "DOWN"
-                                updateSettings(mapOf("state" to "down"))
+                                updateSettings(mapOf("shutter" to "down"))
                             },
                             modifier = Modifier.semantics { contentDescription = "DOWN" }
                         )

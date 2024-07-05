@@ -51,6 +51,7 @@ import com.example.testapp.ui.homepage.home.common.AddButtonRow
 import com.example.testapp.ui.homepage.home.common.RenderDeviceSettings
 import com.example.testapp.utils.dataClasses.general.Device
 import com.example.testapp.utils.dataClasses.general.GeneralDevice
+import com.example.testapp.utils.funcs.formatTime
 import com.example.testapp.utils.viewModels.homeScreen.Schedules.AddScheduleViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -156,7 +157,7 @@ fun AddScheduleScreen(navController: NavController){
                 if ( scheduleName == "" )
                     Toast.makeText(context, "Add a name to the schedule", Toast.LENGTH_SHORT).show()
                 else{
-                    scheduleViewModel.createSchedule(scheduleName, "11:00", "12:00", days) { response ->
+                    scheduleViewModel.createSchedule(scheduleName, formatTime(from), formatTime(until), days) { response ->
                         if (response.isSuccessful) {
                             navController.navigate("home")
                         } else {
